@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.bundles.reactive)
 
     // Image tools
+    ksp(libs.glide.ksp)
     implementation(libs.bundles.image.tools)
 
     // Test

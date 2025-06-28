@@ -2,6 +2,8 @@ package com.wedrive.test.feature.login
 
 import android.text.InputFilter
 import com.namuplanet.base.extension.createViewModel
+import com.namuplanet.base.extension.navigate
+import com.namuplanet.base.extension.observe
 import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.platfrom.BaseFragment
 import com.wedrive.test.R
@@ -31,6 +33,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     override fun observeLiveData() {
         viewModel.isRequestProcessing.observe(this) {
             displayProgress(it)
+        }
+
+        viewModel.moveToHome.observe(this) {
+            navigate(LoginFragmentDirections.actionLoginToHome())
         }
     }
 }

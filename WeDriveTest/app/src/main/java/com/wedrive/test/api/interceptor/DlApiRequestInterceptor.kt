@@ -38,12 +38,13 @@ class DlApiRequestInterceptor: Interceptor {
 }
 
 object DlApiHeader {
-    const val CONTENT_TYPE = "Content-Type"
-    const val LOCALE_CODE  = "lclCd"
-    const val OS_TYPE      = "osKind"
-    const val OS_ANDROID   = "aos"
-    const val APP_VERSION  = "version"
-    const val AUTH_TOKEN   = "Authorization"
-    const val DEVICE_NM    = "deviceNm"
-    const val OS_VERSION   = "osVersion"
+    const val CONTENT_TYPE  = "Content-Type"
+    const val LOCALE_CODE   = "lclCd"
+    const val OS_TYPE       = "osKind"
+    const val OS_ANDROID    = "aos"
+    const val APP_VERSION   = "version"
+    const val AUTH_TOKEN    = "Authorization"
+    const val REFRESH_TOKEN = "refreshToken"
+    const val DEVICE_NM     = "deviceNm"
+    const val OS_VERSION    = "osVersion"
 }

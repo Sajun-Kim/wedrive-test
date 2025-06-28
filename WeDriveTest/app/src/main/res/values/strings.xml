@@ -9,4 +9,7 @@
     <string name="login_pw">비밀번호</string>
     <string name="login_pw_hint">비밀번호 입력해주세요</string>
     <string name="login_login">로그인</string>
+
+    <!-- 홈 -->
+    <string name="home_search_hint">Search</string>
 </resources>
