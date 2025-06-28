@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeDriveTest</string>
+
+    <string name="app_pref_name">com.wedrive.test.PREF</string>
 </resources>
