@@ -18,8 +18,9 @@ class HomeViewModel : BaseViewModel() {
     val showItems = MutableLiveData<List<DisplayableItem>>()
 
     fun initHome() {
-        // 전체 게시물 조회
         items.clear()
+
+        // 전체 게시물 조회
         executeApi(
             apiCall = {
                 postService.getPost(
@@ -31,6 +32,7 @@ class HomeViewModel : BaseViewModel() {
             },
             onSuccess = {
                 Timber.d("isMore: ${it.isMore}")
+
                 it.list?.let { list ->
                     Timber.d("size: ${list.size}")
                     Timber.d("result: $list")

@@ -3,7 +3,6 @@ package com.wedrive.test.feature.home
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
-import com.namuplanet.base.extension.observe
 import com.namuplanet.base.platfrom.BaseFragment
 import com.namuplanet.base.view.BaseAdapter
 import com.wedrive.test.R
