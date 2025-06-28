@@ -1,32 +1,111 @@
 [versions]
-agp = "8.11.0"
-kotlin = "2.0.21"
-coreKtx = "1.16.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
-activityCompose = "1.8.0"
-composeBom = "2024.09.00"
+# App
+major   = "0"
+minor   = "0"
+patch   = "1"
+develop = "1"
+
+# SDK
+compileSdk = "35"
+minSdk     = "26"
+targetSdk  = "35"
+
+# Android Jetpack
+coreKtxVersion          = "1.16.0"
+appCompatVersion        = "1.7.1"
+constraintlayoutVersion = "2.2.1"
+lifecycleServiceVersion = "2.9.1"
+multidexVersion         = "2.0.1"
+navigationVersion       = "2.9.0"
+preferenceVersion       = "1.2.1"
+recyclerViewVersion     = "1.4.0"
+sqliteVersion           = "2.5.2"
+
+# Logging
+timberVersion  = "5.0.1"
+
+# Moshi
+moshiVersion = "1.12.0"
+
+# Retrofit
+retrofitVersion                        = "2.9.0"
+retrofitKotlinCoroutinesAdapterVersion = "0.9.2"
+
+# Reactive
+rxAndroidVersion = "2.1.1"
+rxKotlinVersion  = "2.4.0"
+
+# Image tools
+glideVersion = "5.0.0-rc01"
+
+# Test
+junitVersion        = "4.13.2"
+extJunitVersion     = "1.2.1"
+expressoCoreVersion = "3.6.1"
+
+# Plugins
+androidApplicationVersion = "8.10.1"
+androidLibraryVersion     = "8.10.1"
+kotlinVersion             = "2.0.21"
+kspVersion                = "2.0.21-1.0.27"
+
+####################################################
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+# Android Jetpack
+androidx-core-ktx                       = { module = "androidx.core:core-ktx",                              version.ref = "coreKtxVersion"          }
+androidx-appcompat                      = { module = "androidx.appcompat:appcompat",                        version.ref = "appCompatVersion"        }
+androidx-constraintlayout               = { module = "androidx.constraintlayout:constraintlayout",          version.ref = "constraintlayoutVersion" }
+androidx-lifecycle-service              = { module = "androidx.lifecycle:lifecycle-service",                version.ref = "lifecycleServiceVersion" }
+androidx-multidex                       = { module = "androidx.multidex:multidex",                          version.ref = "multidexVersion"         }
+androidx-navigation-fragment-ktx        = { module = "androidx.navigation:navigation-fragment-ktx",         version.ref = "navigationVersion"       }
+androidx-navigation-ui-ktx              = { module = "androidx.navigation:navigation-ui-ktx",               version.ref = "navigationVersion"       }
+androidx-preference-ktx                 = { module = "androidx.preference:preference-ktx",                  version.ref = "preferenceVersion"       }
+androidx-recyclerview                   = { module = "androidx.recyclerview:recyclerview",                  version.ref = "recyclerViewVersion"     }
+androidx-sqlite                         = { module = "androidx.sqlite:sqlite",                              version.ref = "sqliteVersion"           }
+
+# Logging
+timber              = { module = "com.jakewharton.timber:timber",            version.ref = "timberVersion"  }
+
+# Moshi
+moshi-kotlin         = { module = "com.squareup.moshi:moshi-kotlin",         version.ref = "moshiVersion" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion" }
+
+# Retrofit
+retrofit                           = { module = "com.squareup.retrofit2:retrofit",                              version.ref = "retrofitVersion"                         }
+retrofit-converter-gson            = { module = "com.squareup.retrofit2:converter-gson",                        version.ref = "retrofitVersion"                        }
+retrofit-converter-moshi           = { module = "com.squareup.retrofit2:converter-moshi",                       version.ref = "retrofitVersion"                        }
+retrofit-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofitKotlinCoroutinesAdapterVersion" }
+
+# Reactive
+rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroidVersion" }
+rxKotlin  = { module = "io.reactivex.rxjava2:rxkotlin",  version.ref = "rxKotlinVersion"  }
+
+# Image tools
+glide-ksp                 = { module = "com.github.bumptech.glide:ksp",                 version.ref = "glideVersion" }
+glide-okhttp3-integration = { module = "com.github.bumptech.glide:okhttp3-integration", version.ref = "glideVersion" }
+
+# Test
+junit                  = { module = "junit:junit",                          version.ref = "junitVersion"        }
+androidx-junit         = { module = "androidx.test.ext:junit",              version.ref = "extJunitVersion"     }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "expressoCoreVersion" }
+
+####################################################
+
+[bundles]
+android-jetpack = [ "androidx-core-ktx", "androidx-appcompat", "androidx-constraintlayout", "androidx-lifecycle-service",
+    "androidx-multidex", "androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx", "androidx-preference-ktx",
+    "androidx-recyclerview", "androidx-sqlite", ]
+moshi           = [ "moshi-kotlin", "moshi-kotlin-codegen" ]
+retrofit        = [ "retrofit", "retrofit-converter-gson", "retrofit-converter-moshi", "retrofit-kotlin-coroutines-adapter" ]
+reactive        = [ "rxAndroid", "rxKotlin" ]
+image-tools     = [ "glide-okhttp3-integration" ]
+
+####################################################
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+android-application  = { id = "com.android.application",             version.ref = "androidApplicationVersion" }
+android-library      = { id = "com.android.library",                 version.ref = "androidLibraryVersion"     }
+jetbrains-kotlin     = { id = "org.jetbrains.kotlin.android",        version.ref = "kotlinVersion"             }
+google-ksp           = { id = "com.google.devtools.ksp",             version.ref = "kspVersion"                }
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationVersion"         }
