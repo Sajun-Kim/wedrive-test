@@ -18,7 +18,13 @@ suspend fun <T> Deferred<T>.awaitResult(): Result<T> {
         if (e.code() == 401) {
             return Result.Error(Failure.AuthError)
         } else {
-            return Result.Error(Failure.HttpError(e.code().toString(), e.message()))
+            val result = e.response()?.errorBody()?.string()?.toString()?.split(":") ?: listOf()
+            val serverMsg = when(result.isNotEmpty()) {
+                true  -> result[1].replace("[\"}]".toRegex(), "")
+                false -> ""
+            }
+
+            return Result.Error(Failure.HttpError(e.code().toString(), e.message(), serverMsg))
         }
     } catch (e: SocketTimeoutException) {
         return Result.Error(Failure.TimeOutError)

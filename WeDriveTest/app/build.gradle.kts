@@ -83,6 +83,7 @@ dependencies {
 
     // Logging
     implementation(libs.timber)
+    implementation(libs.okHttpLogging)
 
     // Moshi
     implementation(libs.bundles.moshi)

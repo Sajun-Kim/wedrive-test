@@ -22,7 +22,8 @@ recyclerViewVersion     = "1.4.0"
 sqliteVersion           = "2.5.2"
 
 # Logging
-timberVersion  = "5.0.1"
+timberVersion = "5.0.1"
+okHttpLoggingVersion = "4.12.0"
 
 # Moshi
 moshiVersion = "1.12.0"
@@ -65,7 +66,8 @@ androidx-recyclerview                   = { module = "androidx.recyclerview:recy
 androidx-sqlite                         = { module = "androidx.sqlite:sqlite",                              version.ref = "sqliteVersion"           }
 
 # Logging
-timber              = { module = "com.jakewharton.timber:timber",            version.ref = "timberVersion"  }
+timber        = { module = "com.jakewharton.timber:timber",            version.ref = "timberVersion" }
+okHttpLogging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttpLoggingVersion" }
 
 # Moshi
 moshi-kotlin         = { module = "com.squareup.moshi:moshi-kotlin",         version.ref = "moshiVersion" }
