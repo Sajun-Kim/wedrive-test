@@ -1,12 +1,14 @@
 package com.wedrive.test.feature.home.viewholder
 
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.namuplanet.base.extension.bind
 import com.namuplanet.base.view.BaseViewHolder
 import com.namuplanet.base.view.DisplayableItem
 import com.namuplanet.base.view.ViewHolderProvider
 import com.wedrive.test.R
 import com.wedrive.test.databinding.ItemHomeImageBinding
+import timber.log.Timber
 
 private val LAYOUT_ID = R.layout.item_home_image
 
@@ -17,7 +19,9 @@ data class HomeImageItem(
 class HomeImageViewHolder(val binding: ItemHomeImageBinding):
     BaseViewHolder<HomeImageItem, Any>(binding) {
     override fun bind(item: HomeImageItem, itemListener: Any?) {
-
+        Glide.with(binding.ivImage)
+            .load(item.imageUrl)
+            .into(binding.ivImage)
     }
 }
 

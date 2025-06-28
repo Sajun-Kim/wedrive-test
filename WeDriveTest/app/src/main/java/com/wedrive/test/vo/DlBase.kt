@@ -84,3 +84,23 @@ open class DlLoginBase(
         return false
     }
 }
+
+open class DlPostBase<T>(
+    val msg: String? = null,
+    val list: T? = null,
+    val isMore: Boolean = false
+) : HttpResponse {
+    override fun isSuccessful(): Boolean {
+        return msg.isNullOrEmpty()
+    }
+
+    override val apiError: Failure.ApiError?
+        get() {
+            if (isSuccessful()) return null
+            return Failure.ApiError("00001", msg ?: "")
+        }
+
+    override fun onHandled(): Boolean {
+        return false
+    }
+}
