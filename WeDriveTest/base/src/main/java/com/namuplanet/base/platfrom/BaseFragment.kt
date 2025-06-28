@@ -6,7 +6,6 @@ import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
-import android.content.IntentSender
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -19,25 +18,15 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import androidx.core.graphics.toColorInt
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateLayoutParams
-import com.google.android.gms.location.Priority
 
 abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
     protected lateinit var binding: T
@@ -222,55 +211,6 @@ abstract class BaseFragment<T : ViewDataBinding> : Fragment() {
             }
             // 사용자가 "취소"를 눌렀을 때 및 오류 상황
             else -> Toast.makeText(requireContext(), "위치 서비스를 켜지 못했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun checkLocationSettings(callback: (() -> Unit)? = null) {
-        checkLocationCallback = callback
-
-        val settingsClient = LocationServices.getSettingsClient(requireContext())
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY, 10_000
-        ).build()
-        val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-            .setAlwaysShow(true)
-
-        settingsClient.checkLocationSettings(builder.build())
-            .addOnSuccessListener {
-                // 위치 설정이 켜져 있는 경우
-                Timber.i("Location service is already enabled.")
-                checkLocationCallback?.invoke()
-            }
-            .addOnFailureListener { exception ->
-                if (exception is ResolvableApiException) {
-                    // 위치 서비스가 꺼져 있는 경우, 다이얼로그 표시
-                    try {
-                        val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
-                        locationSettingsLauncher.launch(intentSenderRequest)
-                    } catch (e: IntentSender.SendIntentException) {
-                        Timber.e("Location intent error: ${e.message}")
-                    }
-                } else {
-                    // 설정을 변경할 수 없는 경우
-                    Timber.e("Cannot enable location service.")
-                }
-            }
-    }
-
-    fun showViewAboveIme(view: View) {
-        ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
-            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
-//            val imeInsets = windowInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.ime())
-            // cvNext의 원래 마진/패딩을 고려하여 업데이트
-            val initialMarginBottom = 30
-            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = initialMarginBottom + imeInsets.bottom
-            }
-            // 또는 패딩을 사용
-//             view.updatePadding(bottom = 30 + imeInsets.bottom)
-
-            WindowInsetsCompat.CONSUMED
         }
     }
 
