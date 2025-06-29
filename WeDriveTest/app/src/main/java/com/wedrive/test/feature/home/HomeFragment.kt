@@ -4,14 +4,15 @@ import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.navigate
-import com.namuplanet.base.extension.observe
 import com.namuplanet.base.platfrom.BaseFragment
+import com.namuplanet.base.platfrom.OnBackPressedListener
 import com.namuplanet.base.view.BaseAdapter
 import com.wedrive.test.R
+import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.databinding.FragmentHomeBinding
 import com.wedrive.test.feature.home.viewholder.HomeImageProvider
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener {
     override fun layoutRes() = R.layout.fragment_home
 
     private val viewModel by lazy {
@@ -52,6 +53,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
         viewModel.moveToHomeDetail.observe(this) {
             navigate(HomeFragmentDirections.actionHomeToDetail(it))
+        }
+    }
+
+    private var backPressedTime = 0L
+    override fun onBackPressed(): Boolean {
+        if (System.currentTimeMillis() > backPressedTime + 2_000L) {
+            backPressedTime = System.currentTimeMillis()
+            WeDriveTestApplication.instance.showToast(getString(R.string.common_exit_confirm))
+            return true
+        }
+        else {
+            return false
         }
     }
 }
