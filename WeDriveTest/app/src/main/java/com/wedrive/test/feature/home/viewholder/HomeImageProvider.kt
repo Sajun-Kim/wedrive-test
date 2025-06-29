@@ -25,11 +25,12 @@ data class HomeImageItem(
 class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
     BaseViewHolder<HomeImageItem, Any>(binding) {
     override fun bind(item: HomeImageItem, itemListener: Any?) {
-        binding.ivImage.minimumHeight = item.height - 200
+        binding.ivImage.layoutParams.width = item.width
+        binding.ivImage.layoutParams.height = item.height
 
         Glide.with(binding.ivImage)
             .load(item.imageUrl)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(24)))
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
             .into(binding.ivImage)
 
         binding.ivImage.setOnSingleClickListener {

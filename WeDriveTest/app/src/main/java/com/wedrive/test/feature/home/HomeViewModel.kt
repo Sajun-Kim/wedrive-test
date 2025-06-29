@@ -22,14 +22,15 @@ class HomeViewModel : BaseViewModel() {
     fun initHome(keyword: String = "") {
         items.clear()
 
+        val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
         // 전체 게시물 조회
         executeApi(
             apiCall = {
                 postService.searchPost(
                     page         = 1,
                     pagePer      = 8,
-                    windowWidth  = 1440,
-                    windowHeight = 3000,
+                    windowWidth  = width,
+                    windowHeight = height,
                     keyword      = keyword
                 )
             },
