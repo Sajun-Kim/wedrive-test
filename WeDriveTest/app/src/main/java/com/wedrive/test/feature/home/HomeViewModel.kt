@@ -2,6 +2,7 @@ package com.wedrive.test.feature.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.namuplanet.base.event.SingleLiveEvent
 import com.namuplanet.base.platfrom.BaseViewModel
 import com.namuplanet.base.view.DisplayableItem
 import com.wedrive.test.WeDriveTestApplication
@@ -16,6 +17,7 @@ class HomeViewModel : BaseViewModel() {
     private val items = mutableListOf<DisplayableItem>()
 
     val showItems = MutableLiveData<List<DisplayableItem>>()
+    val moveToHomeDetail = SingleLiveEvent<String>()
 
     fun initHome() {
         items.clear()
@@ -40,9 +42,11 @@ class HomeViewModel : BaseViewModel() {
                     list.forEach { img ->
                         items.add(
                             HomeImageItem(
+                                pid      = img.pid,
                                 imageUrl = img.cover,
                                 width    = img.cover_size.width,
-                                height   = img.cover_size.height
+                                height   = img.cover_size.height,
+                                onImageClicked = ::onImageClicked
                             )
                         )
                     }
@@ -56,5 +60,9 @@ class HomeViewModel : BaseViewModel() {
                 }
             }
         )
+    }
+
+    private fun onImageClicked(pid: String) {
+        moveToHomeDetail.postValue(pid)
     }
 }

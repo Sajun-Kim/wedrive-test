@@ -104,3 +104,26 @@ open class DlPostBase<T>(
         return false
     }
 }
+
+open class DlPostDetailBase(
+    val msg : String? = null,
+    val pid: String,
+    val cover: String,
+    val ratio: Int,
+    val title: String,
+    val context: String
+) : HttpResponse {
+    override fun isSuccessful(): Boolean {
+        return msg.isNullOrEmpty()
+    }
+
+    override val apiError: Failure.ApiError?
+        get() {
+            if (isSuccessful()) return null
+            return Failure.ApiError("00001", msg ?: "")
+        }
+
+    override fun onHandled(): Boolean {
+        return false
+    }
+}

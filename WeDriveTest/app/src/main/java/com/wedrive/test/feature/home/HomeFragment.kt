@@ -3,6 +3,8 @@ package com.wedrive.test.feature.home
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
+import com.namuplanet.base.extension.navigate
+import com.namuplanet.base.extension.observe
 import com.namuplanet.base.platfrom.BaseFragment
 import com.namuplanet.base.view.BaseAdapter
 import com.wedrive.test.R
@@ -31,7 +33,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
 
         // 포커스 여부에 따른 힌트 표시 조정
-        binding.etSearch.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+        binding.etSearch.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             when (hasFocus) {
                 true  -> binding.etSearch.hint = ""
                 false -> binding.etSearch.hint = getString(R.string.home_search_hint)
@@ -47,6 +49,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
         viewModel.showItems.observe(this) {
             baseAdapter.setData(it)
+        }
+        viewModel.moveToHomeDetail.observe(this) {
+            navigate(HomeFragmentDirections.actionHomeToDetail(it))
         }
     }
 }

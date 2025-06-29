@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.namuplanet.base.extension.bind
+import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.view.BaseViewHolder
 import com.namuplanet.base.view.DisplayableItem
 import com.namuplanet.base.view.ViewHolderProvider
@@ -14,9 +15,11 @@ import com.wedrive.test.databinding.ItemHomeImageBinding
 private val LAYOUT_ID = R.layout.item_home_image
 
 data class HomeImageItem(
-    val imageUrl : String,
-    val width    : Int,
-    val height   : Int
+    val pid            : String,
+    val imageUrl       : String,
+    val width          : Int,
+    val height         : Int,
+    val onImageClicked : (String) -> Unit
 ): DisplayableItem(LAYOUT_ID)
 
 class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
@@ -28,6 +31,10 @@ class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
             .load(item.imageUrl)
             .apply(RequestOptions.bitmapTransform(RoundedCorners(24)))
             .into(binding.ivImage)
+
+        binding.ivImage.setOnSingleClickListener {
+            item.onImageClicked(item.pid)
+        }
     }
 }
 
