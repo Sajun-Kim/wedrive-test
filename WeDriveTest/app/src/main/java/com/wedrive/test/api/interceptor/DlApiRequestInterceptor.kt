@@ -24,9 +24,9 @@ class DlApiRequestInterceptor: Interceptor {
                 header(DlApiHeader.LOCALE_CODE, Locale.getDefault().toLanguageTag())
 
             header(DlApiHeader.DEVICE_NM    , android.os.Build.MODEL)                              // 기기 모델명
-            header(DlApiHeader.OS_TYPE      , DlApiHeader.OS_ANDROID)                              // OS 구분
-            header(DlApiHeader.APP_VERSION  , WeDriveTestApplication.instance.getAppVersionName()) // App 버전 : x.x.x
+            header(DlApiHeader.OS_TYPE      , DlApiHeader.OS_ANDROID)                              // OS 구분  : aos(고정)
             header(DlApiHeader.OS_VERSION   , android.os.Build.VERSION.SDK_INT.toString())         // OS 버전  : API Level(26, 27, ...)
+            header(DlApiHeader.APP_VERSION  , WeDriveTestApplication.instance.getAppVersionName()) // App 버전 : x.x.x
         }
         Timber.tag("ApiLogger").d("===== API Request Header =====\n${newRequest.headers}==============================")
         return chain.proceed(newRequest)
