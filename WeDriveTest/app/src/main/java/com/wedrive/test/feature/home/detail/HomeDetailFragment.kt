@@ -7,7 +7,10 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.namuplanet.base.extension.createViewModel
+import com.namuplanet.base.extension.navigateUp
 import com.namuplanet.base.extension.observe
+import com.namuplanet.base.extension.popBackStack
+import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.platfrom.BaseFragment
 import com.wedrive.test.R
 import com.wedrive.test.databinding.FragmentHomeDetailBinding
@@ -24,6 +27,10 @@ class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
 
     override fun initializeView() {
         binding.item = viewModel.postDetailItem
+
+        binding.ivBack.setOnSingleClickListener {
+            popBackStack()
+        }
 
         viewModel.initHomeDetail(args.pid)
     }
