@@ -19,17 +19,18 @@ class HomeViewModel : BaseViewModel() {
     val showItems = MutableLiveData<List<DisplayableItem>>()
     val moveToHomeDetail = SingleLiveEvent<String>()
 
-    fun initHome() {
+    fun initHome(keyword: String = "") {
         items.clear()
 
         // 전체 게시물 조회
         executeApi(
             apiCall = {
-                postService.getPost(
+                postService.searchPost(
                     page         = 1,
                     pagePer      = 8,
                     windowWidth  = 1440,
-                    windowHeight = 3000
+                    windowHeight = 3000,
+                    keyword      = keyword
                 )
             },
             onSuccess = {

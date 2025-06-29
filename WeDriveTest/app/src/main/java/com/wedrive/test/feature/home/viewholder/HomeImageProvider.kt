@@ -25,7 +25,7 @@ data class HomeImageItem(
 class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
     BaseViewHolder<HomeImageItem, Any>(binding) {
     override fun bind(item: HomeImageItem, itemListener: Any?) {
-        binding.ivImage.minimumHeight = item.height - 100
+        binding.ivImage.minimumHeight = item.height - 200
 
         Glide.with(binding.ivImage)
             .load(item.imageUrl)
