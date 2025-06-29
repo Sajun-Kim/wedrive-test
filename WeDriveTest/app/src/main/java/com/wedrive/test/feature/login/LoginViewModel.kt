@@ -6,12 +6,12 @@ import com.namuplanet.base.platfrom.BaseViewModel
 import com.wedrive.test.vo.LoginRequest
 import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.api.interceptor.DlApiHeader
-import com.wedrive.test.api.service.LoginService
+import com.wedrive.test.api.service.AuthService
 import com.wedrive.test.extension.getMessage
 import timber.log.Timber
 
 class LoginViewModel : BaseViewModel() {
-    private val loginService = LoginService.service
+    private val authService = AuthService.service
 
     val moveToHome = SingleLiveEvent<Void?>()
 
@@ -19,7 +19,7 @@ class LoginViewModel : BaseViewModel() {
         executeApi(
             apiCall = {
 //                loginService.getAuthToken(LoginRequest(mid, pwd))
-                loginService.getAuthToken(LoginRequest("test001", "74726556"))
+                authService.getAuthToken(LoginRequest("test001", "74726556"))
             },
             onSuccess = {
                 Timber.d("access token  : ${it.accessToken}")

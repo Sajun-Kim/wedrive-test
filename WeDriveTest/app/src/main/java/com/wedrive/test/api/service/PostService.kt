@@ -27,7 +27,7 @@ interface PostService {
     ) : DlPostResponse<List<PostResponse>>
 
     @GET("post/{pid}")
-    fun getPostDetail(@Path("pid") pid : String) : DlPostDetailResponse
+    fun getPostDetail(@Path("pid") pid: String) : DlPostDetailResponse
 
     companion object {
         val service: PostService = DlRetrofit.createRetrofit()

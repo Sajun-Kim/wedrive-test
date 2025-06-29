@@ -85,6 +85,25 @@ open class DlLoginBase(
     }
 }
 
+open class DlAuthBase<T>(
+    val msg: String? = null,
+    val user: T? = null
+) : HttpResponse {
+    override fun isSuccessful(): Boolean {
+        return msg.isNullOrEmpty()
+    }
+
+    override val apiError: Failure.ApiError?
+        get() {
+            if (isSuccessful()) return null
+            return Failure.ApiError("00001", msg ?: "")
+        }
+
+    override fun onHandled(): Boolean {
+        return false
+    }
+}
+
 open class DlPostBase<T>(
     val msg: String? = null,
     val list: T? = null,
@@ -109,7 +128,7 @@ open class DlPostDetailBase(
     val msg : String? = null,
     val pid: String,
     val cover: String,
-    val ratio: Int,
+    val ratio: Float,
     val title: String,
     val context: String
 ) : HttpResponse {
