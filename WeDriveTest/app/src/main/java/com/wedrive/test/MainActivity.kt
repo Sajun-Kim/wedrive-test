@@ -1,7 +1,10 @@
 package com.wedrive.test
 
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.WindowManager
+import android.view.WindowMetrics
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -10,6 +13,7 @@ import com.namuplanet.base.platfrom.BaseActivity
 import com.namuplanet.base.platfrom.OnBackPressedListener
 import com.wedrive.test.databinding.ActivityMainBinding
 import com.wedrive.test.feature.home.HomeFragment
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
     private lateinit var binding       : ActivityMainBinding
@@ -24,6 +28,9 @@ class MainActivity : BaseActivity() {
         // 뒤로가기 이벤트 등록
         onBackPressedRegister()
 
+        // 기기의 가로/세로 길이 조회
+        getDeviceWidthHeight()
+
         initializeView()
     }
 
@@ -35,6 +42,26 @@ class MainActivity : BaseActivity() {
         navController.setGraph(R.navigation.nav_graph)
 
         setEdgeToEdgeView(binding.lyMain)
+    }
+
+    private fun getDeviceWidthHeight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics: WindowMetrics = this.windowManager.currentWindowMetrics
+            val bounds = windowMetrics.bounds
+            val width = bounds.width()
+            val height = bounds.height()
+            Timber.d("WindowMetrics: Width = $width, Height = $height")
+            WeDriveTestApplication.instance.setDeviceWidthHeight(width, height)
+        }
+        else {
+            val displayMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            this.windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+            val width = displayMetrics.widthPixels
+            val height = displayMetrics.heightPixels
+            Timber.d("DisplayMetrics: Width = $width, Height = $height")
+            WeDriveTestApplication.instance.setDeviceWidthHeight(width, height)
+        }
     }
 
     private fun onBackPressedRegister() {

@@ -16,6 +16,8 @@ class WeDriveTestApplication: Application() {
     }
 
     lateinit var pref: CustomSharedPreferences
+    private var deviceWidth  : Int = 0
+    private var deviceHeight : Int = 0
 
     override fun onCreate() {
         super.onCreate()
@@ -41,6 +43,14 @@ class WeDriveTestApplication: Application() {
             Timber.e("get version name error\n${e.stackTraceToString()}")
             ""
         }
+    }
+
+    fun setDeviceWidthHeight(width: Int, height: Int) {
+        deviceWidth  = width
+        deviceHeight = height
+    }
+    fun getDeviceWidthHeight(): Pair<Int, Int> {
+        return deviceWidth to deviceHeight
     }
 
     fun showToast(message: String) {
