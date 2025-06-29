@@ -1,12 +1,14 @@
 package com.wedrive.test
 
 import android.app.Application
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
 import com.namuplanet.base.preference.CustomSharedPreferences
 import timber.log.Timber
+import kotlin.system.exitProcess
 
 class WeDriveTestApplication: Application() {
     companion object {
@@ -43,6 +45,18 @@ class WeDriveTestApplication: Application() {
 
     fun showToast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
+    // 앱 재시작
+    // 새로운 액티비티 생성 후 기존 액티비티 종료
+    fun restartApp() {
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        intent?.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }.let {
+            startActivity(it)
+            exitProcess(0)
+        }
     }
 }
 

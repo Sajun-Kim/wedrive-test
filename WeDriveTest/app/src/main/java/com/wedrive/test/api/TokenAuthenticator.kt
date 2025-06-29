@@ -8,6 +8,9 @@ import com.wedrive.test.api.service.TokenService
 import com.wedrive.test.utility.getString
 import com.wedrive.test.vo.RefreshRequest
 import com.wedrive.test.vo.TokenResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Authenticator
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -79,7 +82,11 @@ class TokenAuthenticator(
                 }
             } else { // 리프레시 실패 시
                 pref.clearAll() // 토큰 삭제
-                null            // 요청 중단
+                CoroutineScope(Dispatchers.Main).launch {
+                    WeDriveTestApplication.instance.showToast(getString(R.string.login_auth_fail))
+                }
+                WeDriveTestApplication.instance.restartApp()
+                null // 요청 중단
             }
         }
     }
@@ -111,8 +118,11 @@ class TokenAuthenticator(
                  Timber.e("Failed to refresh token. Code: ${response.code()}, Message: ${response.message()}")
                 if (response.code() == 401 || response.code() == 403) {
                     // 리프레시 토큰이 만료되었거나 유효하지 않음
-                    // 여기서도 로그아웃 처리가 필요할 수 있음
-                    pref.clearAll()
+                    pref.clearAll() // 토큰 삭제
+                    CoroutineScope(Dispatchers.Main).launch {
+                        WeDriveTestApplication.instance.showToast(getString(R.string.login_auth_fail))
+                    }
+                    WeDriveTestApplication.instance.restartApp()
                 }
                 return null
             }
