@@ -5,7 +5,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.navigate
@@ -15,7 +14,6 @@ import com.namuplanet.base.view.BaseAdapter
 import com.wedrive.test.R
 import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.databinding.FragmentHomeBinding
-import com.wedrive.test.extension.dpToPx
 import com.wedrive.test.feature.home.viewholder.HomeImageProvider
 import com.wedrive.test.utility.ViewUtil
 
@@ -98,7 +96,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             baseAdapter.setData(it)
         }
         viewModel.moveToHomeDetail.observe(this) {
-            navigate(HomeFragmentDirections.actionHomeToDetail(it))
+            navigate(HomeFragmentDirections.actionHomeToDetail(it.first, it.second, it.third))
         }
     }
 

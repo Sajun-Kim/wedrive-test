@@ -7,6 +7,7 @@ import com.namuplanet.base.platfrom.BaseViewModel
 import com.namuplanet.base.view.DisplayableItem
 import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.api.service.PostService
+import com.wedrive.test.extension.dpToPx
 import com.wedrive.test.extension.getMessage
 import com.wedrive.test.feature.home.viewholder.HomeImageItem
 import timber.log.Timber
@@ -17,7 +18,7 @@ class HomeViewModel : BaseViewModel() {
     private val items = mutableListOf<DisplayableItem>()
 
     val showItems = MutableLiveData<List<DisplayableItem>>()
-    val moveToHomeDetail = SingleLiveEvent<String>()
+    val moveToHomeDetail = SingleLiveEvent<Triple<String, Int, Int>>()
 
     fun initHome(keyword: String = "") {
         items.clear()
@@ -29,7 +30,7 @@ class HomeViewModel : BaseViewModel() {
                 postService.searchPost(
                     page         = 1,
                     pagePer      = 8,
-                    windowWidth  = width,
+                    windowWidth  = width - 20.dpToPx(WeDriveTestApplication.instance.applicationContext), // margin 고려
                     windowHeight = height,
                     keyword      = keyword
                 )
@@ -64,7 +65,7 @@ class HomeViewModel : BaseViewModel() {
         )
     }
 
-    private fun onImageClicked(pid: String) {
-        moveToHomeDetail.postValue(pid)
+    private fun onImageClicked(pid: String, width: Int, height: Int) {
+        moveToHomeDetail.postValue(Triple(pid, width, height))
     }
 }

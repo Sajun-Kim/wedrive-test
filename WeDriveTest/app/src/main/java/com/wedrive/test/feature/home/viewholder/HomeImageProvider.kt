@@ -19,7 +19,7 @@ data class HomeImageItem(
     val imageUrl       : String,
     val width          : Int,
     val height         : Int,
-    val onImageClicked : (String) -> Unit
+    val onImageClicked : (String, Int, Int) -> Unit
 ): DisplayableItem(LAYOUT_ID)
 
 class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
@@ -30,11 +30,10 @@ class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
 
         Glide.with(binding.ivImage)
             .load(item.imageUrl)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
             .into(binding.ivImage)
 
         binding.ivImage.setOnSingleClickListener {
-            item.onImageClicked(item.pid)
+            item.onImageClicked(item.pid, item.width, item.height)
         }
     }
 }

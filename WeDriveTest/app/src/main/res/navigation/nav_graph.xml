@@ -38,6 +38,14 @@
             android:name="pid"
             app:argType="string"
             app:nullable="false" />
+        <argument
+            android:name="width"
+            app:argType="integer"
+            app:nullable="false" />
+        <argument
+            android:name="height"
+            app:argType="integer"
+            app:nullable="false" />
     </fragment>
 
 </navigation>

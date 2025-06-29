@@ -11,14 +11,14 @@ import timber.log.Timber
 
 class HomeDetailViewModel : BaseViewModel() {
     private val authService = AuthService.authService
-    private val postServiceAuth = PostService.authService
+    private val postService = PostService.authService
 
     val postDetailItem = PostDetailItem()
 
     fun initHomeDetail(pid: String) {
         // 게시물 상세 조회
         executeApi(
-            apiCall   = { postServiceAuth.getPostDetail(pid) },
+            apiCall   = { postService.getPostDetail(pid) },
             onSuccess = {
                 Timber.d("pid     : ${it.pid}")
                 Timber.d("cover   : ${it.cover}")
