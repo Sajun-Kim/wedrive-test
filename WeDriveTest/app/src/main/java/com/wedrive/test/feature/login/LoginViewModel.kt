@@ -11,7 +11,7 @@ import com.wedrive.test.extension.getMessage
 import timber.log.Timber
 
 class LoginViewModel : BaseViewModel() {
-    private val authService = AuthService.service
+    private val authService = AuthService.authService
 
     val moveToHome = SingleLiveEvent<Void?>()
 
@@ -26,7 +26,7 @@ class LoginViewModel : BaseViewModel() {
                 Timber.d("refresh token : ${it.refreshToken}")
 
                 WeDriveTestApplication.instance.pref[DlApiHeader.AUTH_TOKEN]    = "Bearer ${it.accessToken}"
-                WeDriveTestApplication.instance.pref[DlApiHeader.REFRESH_TOKEN] = "Bearer ${it.refreshToken}"
+                WeDriveTestApplication.instance.pref[DlApiHeader.REFRESH_TOKEN] = "${it.refreshToken}"
 
                 moveToHome.postCall()
             },

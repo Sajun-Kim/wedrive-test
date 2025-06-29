@@ -85,7 +85,7 @@ open class DlLoginBase(
     }
 }
 
-open class DlAuthBase<T>(
+open class DlUserInfoBase<T>(
     val msg: String? = null,
     val user: T? = null
 ) : HttpResponse {

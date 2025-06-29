@@ -9,4 +9,4 @@ typealias DlNullableResponse<T> = Deferred<DlNullableBase<T>>
 typealias DlLoginResponse = Deferred<DlLoginBase>
 typealias DlPostResponse<T> = Deferred<DlPostBase<T>>
 typealias DlPostDetailResponse = Deferred<DlPostDetailBase>
-typealias DlAuthResponse<T> = Deferred<DlAuthBase<T>>
+typealias DlUserInfoResponse<T> = Deferred<DlUserInfoBase<T>>

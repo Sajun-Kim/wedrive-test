@@ -5,8 +5,17 @@ data class LoginRequest(
     val pwd: String
 )
 
-data class AuthResponse(
+data class UserInfoResponse(
     val mid     : String,
     val profile : String?,
     val name    : String,
+)
+
+data class RefreshRequest(
+    val refreshToken: String
+)
+
+data class TokenResponse(
+    val accessToken: String,
+    val refreshToken: String
 )

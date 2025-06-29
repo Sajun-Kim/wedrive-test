@@ -30,6 +30,6 @@ interface PostService {
     fun getPostDetail(@Path("pid") pid: String) : DlPostDetailResponse
 
     companion object {
-        val service: PostService = DlRetrofit.createRetrofit()
+        val authService: PostService = DlRetrofit.createRetrofitAuth()
     }
 }

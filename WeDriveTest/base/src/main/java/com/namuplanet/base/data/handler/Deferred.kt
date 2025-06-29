@@ -16,14 +16,18 @@ suspend fun <T> Deferred<T>.awaitResult(): Result<T> {
         await()
     } catch (e: HttpException) {
         if (e.code() == 401) {
-            return Result.Error(Failure.AuthError)
-        } else {
-            val result = e.response()?.errorBody()?.string()?.toString()?.split(":") ?: listOf()
+            val result = e.response()?.errorBody()?.string()?.split(":") ?: listOf()
             val serverMsg = when(result.isNotEmpty()) {
                 true  -> result[1].replace("[\"}]".toRegex(), "")
                 false -> ""
             }
-
+            return Result.Error(Failure.AuthError(e.code().toString(), e.message(), serverMsg))
+        } else {
+            val result = e.response()?.errorBody()?.string()?.split(":") ?: listOf()
+            val serverMsg = when(result.isNotEmpty()) {
+                true  -> result[1].replace("[\"}]".toRegex(), "")
+                false -> ""
+            }
             return Result.Error(Failure.HttpError(e.code().toString(), e.message(), serverMsg))
         }
     } catch (e: SocketTimeoutException) {

@@ -13,7 +13,19 @@ object HttpClientProvider {
             .apply {
                 addInterceptor(DlApiRequestInterceptor())
                 addInterceptor(DlApiResponseInterceptor())
-                HttpInterceptorProvider.get()?.forEach { addInterceptor(it) }
+                HttpInterceptorProvider.get().forEach { addInterceptor(it) }
+            }
+            .build()
+
+    fun getHttpClientWithAuth(): OkHttpClient =
+        OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .apply {
+                authenticator(TokenAuthenticator(getHttpClient()))
+                addInterceptor(DlApiRequestInterceptor())
+                addInterceptor(DlApiResponseInterceptor())
+                HttpInterceptorProvider.get().forEach { addInterceptor(it) }
             }
             .build()
 }

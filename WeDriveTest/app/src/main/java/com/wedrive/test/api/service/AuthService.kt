@@ -2,8 +2,8 @@ package com.wedrive.test.api.service
 
 import com.wedrive.test.vo.LoginRequest
 import com.wedrive.test.api.DlRetrofit
-import com.wedrive.test.vo.AuthResponse
-import com.wedrive.test.vo.DlAuthResponse
+import com.wedrive.test.vo.UserInfoResponse
+import com.wedrive.test.vo.DlUserInfoResponse
 import com.wedrive.test.vo.DlLoginResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,9 +16,9 @@ interface AuthService {
 
     // 사용자 정보 조회
     @GET("auth")
-    fun getAuthInfo(): DlAuthResponse<AuthResponse>
+    fun getUserInfo(): DlUserInfoResponse<UserInfoResponse>
 
     companion object {
-        val service: AuthService = DlRetrofit.createRetrofit()
+        val authService: AuthService = DlRetrofit.createRetrofitAuth()
     }
 }

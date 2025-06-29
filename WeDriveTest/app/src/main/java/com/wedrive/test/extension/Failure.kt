@@ -8,6 +8,7 @@ infix fun Failure.hasErrorCode(errorCode: String): Boolean =
     when (this) {
         is Failure.ApiError -> this.errorCode == errorCode
         is Failure.HttpError -> this.errorCode == errorCode
+        is Failure.AuthError -> this.errorCode == errorCode
         else -> false
     }
 
@@ -34,6 +35,7 @@ fun Failure.getMessage(): String =
             Timber.e("ServerMsg: ${this.serverMessage}")
             this.serverMessage
         }
+        is Failure.AuthError -> this.errorMessage
         is Failure.Exception -> this.throwable.message ?: ""
         else -> ""
     }

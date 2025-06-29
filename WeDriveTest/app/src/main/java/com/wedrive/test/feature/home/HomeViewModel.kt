@@ -12,7 +12,7 @@ import com.wedrive.test.feature.home.viewholder.HomeImageItem
 import timber.log.Timber
 
 class HomeViewModel : BaseViewModel() {
-    private val postService = PostService.service
+    private val postService = PostService.authService
 
     private val items = mutableListOf<DisplayableItem>()
 
