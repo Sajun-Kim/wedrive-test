@@ -26,8 +26,8 @@ class HomeViewModel : BaseViewModel() {
                 postService.getPost(
                     page         = 1,
                     pagePer      = 8,
-                    windowWidth  = 390,
-                    windowHeight = 500
+                    windowWidth  = 1440,
+                    windowHeight = 3000
                 )
             },
             onSuccess = {
@@ -38,7 +38,13 @@ class HomeViewModel : BaseViewModel() {
                     Timber.d("result: $list")
 
                     list.forEach { img ->
-                        items.add(HomeImageItem(img.cover))
+                        items.add(
+                            HomeImageItem(
+                                imageUrl = img.cover,
+                                width    = img.cover_size.width,
+                                height   = img.cover_size.height
+                            )
+                        )
                     }
 
                     showItems.postValue(items)
