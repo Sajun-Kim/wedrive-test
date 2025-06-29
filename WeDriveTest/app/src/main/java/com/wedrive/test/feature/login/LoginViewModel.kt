@@ -18,7 +18,8 @@ class LoginViewModel : BaseViewModel() {
     fun login(mid: String, pwd: String) {
         executeApi(
             apiCall = {
-                loginService.getAuthToken(LoginRequest(mid, pwd))
+//                loginService.getAuthToken(LoginRequest(mid, pwd))
+                loginService.getAuthToken(LoginRequest("test001", "74726556"))
             },
             onSuccess = {
                 Timber.d("access token  : ${it.accessToken}")
