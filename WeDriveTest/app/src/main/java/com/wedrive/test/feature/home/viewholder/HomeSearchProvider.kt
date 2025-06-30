@@ -3,6 +3,9 @@ package com.wedrive.test.feature.home.viewholder
 import android.view.ViewGroup
 import androidx.core.database.getStringOrNull
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.namuplanet.base.extension.bind
 import com.namuplanet.base.view.BaseAdapter
 import com.namuplanet.base.view.BaseViewHolder
@@ -29,7 +32,10 @@ class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
 
     override fun bind(item: HomeSearchItem, itemListener: Any?) {
         binding.rvSearch.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = FlexboxLayoutManager(context).apply {
+                flexDirection = FlexDirection.ROW // 가로 방향 아이템 배치
+                flexWrap      = FlexWrap.WRAP     // 아이템이 공간을 벗어나면 다음 줄로 넘김
+            }
             adapter = baseAdapter
         }
 

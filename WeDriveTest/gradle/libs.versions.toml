@@ -21,6 +21,9 @@ preferenceVersion       = "1.2.1"
 recyclerViewVersion     = "1.4.0"
 sqliteVersion           = "2.5.2"
 
+# Layout
+flexboxVersion = "3.0.0"
+
 # Logging
 timberVersion = "5.0.1"
 okHttpLoggingVersion = "4.12.0"
@@ -64,6 +67,9 @@ androidx-navigation-ui-ktx              = { module = "androidx.navigation:naviga
 androidx-preference-ktx                 = { module = "androidx.preference:preference-ktx",                  version.ref = "preferenceVersion"       }
 androidx-recyclerview                   = { module = "androidx.recyclerview:recyclerview",                  version.ref = "recyclerViewVersion"     }
 androidx-sqlite                         = { module = "androidx.sqlite:sqlite",                              version.ref = "sqliteVersion"           }
+
+# Layout
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexboxVersion" }
 
 # Logging
 timber        = { module = "com.jakewharton.timber:timber",            version.ref = "timberVersion" }

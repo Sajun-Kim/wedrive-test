@@ -81,6 +81,9 @@ dependencies {
     // Android Jetpack
     implementation(libs.bundles.android.jetpack)
 
+    // Layout
+    implementation(libs.flexbox)
+
     // Logging
     implementation(libs.timber)
     implementation(libs.okHttpLogging)
