@@ -13,7 +13,6 @@ import com.wedrive.test.extension.getMessage
 import com.wedrive.test.feature.home.viewholder.HomeImageItem
 import com.wedrive.test.feature.home.viewholder.HomeSearchRecentItem
 import com.wedrive.test.utility.sqlite.SQLiteManager
-import timber.log.Timber
 
 class HomeViewModel : BaseViewModel() {
     private val postService = PostService.authService
@@ -24,11 +23,19 @@ class HomeViewModel : BaseViewModel() {
     private val sqliteManager = SQLiteManager(appContext)
 
     val showItems        = MutableLiveData<List<DisplayableItem>>()
+    val addItems         = MutableLiveData<List<DisplayableItem>>()
     val moveToHomeDetail = SingleLiveEvent<Triple<String, Int, Int>>()
     val searchKeyword    = SingleLiveEvent<String>()
+    val setIsLoading     = SingleLiveEvent<Boolean>()
+
+    var pageNumber = 2
+    var keyword = ""
 
     fun getCoverImages(keyword: String = "") {
         items.clear()
+        pageNumber = 2
+        this.keyword = keyword
+        setIsLoading.postValue(false)
 
         val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
         // 전체 게시물 조회
@@ -36,19 +43,14 @@ class HomeViewModel : BaseViewModel() {
             apiCall = {
                 postService.searchPost(
                     page         = 1,
-                    pagePer      = 8,
+                    pagePer      = 10,
                     windowWidth  = width - 20.dpToPx(appContext), // margin 고려
                     windowHeight = height,
                     keyword      = keyword
                 )
             },
             onSuccess = {
-                Timber.d("isMore: ${it.isMore}")
-
                 it.list?.let { list ->
-                    Timber.d("size: ${list.size}")
-                    Timber.d("result: $list")
-
                     list.forEach { img ->
                         items.add(
                             HomeImageItem(
@@ -62,6 +64,55 @@ class HomeViewModel : BaseViewModel() {
                     }
 
                     showItems.postValue(items)
+                }
+            },
+            onFailure = {
+                viewModelScope.launchUI {
+                    WeDriveTestApplication.instance.showToast(it.getMessage())
+                }
+            }
+        )
+    }
+
+    fun addCoverImages() {
+        items.clear()
+
+        val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
+        // 특정 페이지 게시물 조회
+        executeApi(
+            apiCall = {
+                postService.searchPost(
+                    page         = pageNumber,
+                    pagePer      = 10,
+                    windowWidth  = width - 20.dpToPx(appContext), // margin 고려
+                    windowHeight = height,
+                    keyword      = this.keyword
+                )
+            },
+            onSuccess = {
+                it.list?.let { list ->
+                    if (list.isEmpty()) {
+                        viewModelScope.launchUI {
+                            WeDriveTestApplication.instance.showToast("추가 이미지가 없습니다.")
+                        }
+                        return@executeApi
+                    }
+
+                    list.forEach { img ->
+                        items.add(
+                            HomeImageItem(
+                                pid            = img.pid,
+                                imageUrl       = img.cover,
+                                width          = img.cover_size.width,
+                                height         = img.cover_size.height,
+                                onImageClicked = ::onImageClicked
+                            )
+                        )
+                    }
+
+                    addItems.postValue(items)
+                    pageNumber += 1
+                    setIsLoading.postValue(false)
                 }
             },
             onFailure = {

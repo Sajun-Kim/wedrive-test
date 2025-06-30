@@ -6,6 +6,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.navigate
@@ -47,11 +48,39 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     val sqliteManager = SQLiteManager(appContext)
 
+    // 이미지 로딩중 체크
+    private var isLoading = false
+
     override fun initializeView() {
         binding.rvHome.apply {
             layoutManager = staggeredGridLayoutManager
             adapter = baseAdapter
         }
+
+        // 맨 아래 이동 시 이미지 추가 로드
+        binding.rvHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as? StaggeredGridLayoutManager
+                layoutManager?.let {
+                    val totalItemCount = it.itemCount
+                    // 각 span에서 마지막으로 보이는 아이템의 position들 조회
+                    val lastVisibleItemPositions = it.findLastCompletelyVisibleItemPositions(null)
+                    // 그 중 가장 큰 position 조회
+                    var maxLastVisiblePosition = 0
+                    for (position in lastVisibleItemPositions) {
+                        if (position > maxLastVisiblePosition) {
+                            maxLastVisiblePosition = position
+                        }
+                    }
+
+                    if (dy > 0 && !isLoading && totalItemCount > 0 && maxLastVisiblePosition == totalItemCount - 1) {
+                        loadMoreItems()
+                    }
+                }
+            }
+        })
 
         // 포커스 여부에 따른 힌트 표시 조정
         binding.etSearch.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
@@ -83,6 +112,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         }
 
         viewModel.getCoverImages()
+    }
+
+    private fun loadMoreItems() {
+        isLoading = true
+        viewModel.addCoverImages()
     }
 
     // 검색창에서 취소 텍스트/버튼 클릭 시
@@ -148,6 +182,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         }
         viewModel.showItems.observe(this) {
             baseAdapter.setData(it)
+        }
+        viewModel.addItems.observe(this) {
+            baseAdapter.addData(it)
+        }
+        viewModel.setIsLoading.observe(this) {
+            isLoading = it
         }
         viewModel.moveToHomeDetail.observe(this) {
             navigate(HomeFragmentDirections.actionHomeToDetail(it.first, it.second, it.third))
