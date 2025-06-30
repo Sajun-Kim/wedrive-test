@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.namuplanet.base.event.SingleLiveEvent
 import com.namuplanet.base.platfrom.BaseViewModel
 import com.namuplanet.base.view.DisplayableItem
+import com.wedrive.test.R
 import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.api.service.PostService
 import com.wedrive.test.extension.dpToPx
 import com.wedrive.test.extension.getMessage
 import com.wedrive.test.feature.home.viewholder.HomeImageItem
 import com.wedrive.test.feature.home.viewholder.HomeSearchRecentItem
+import com.wedrive.test.utility.getString
 import com.wedrive.test.utility.sqlite.SQLiteManager
 
 class HomeViewModel : BaseViewModel() {
@@ -28,8 +30,8 @@ class HomeViewModel : BaseViewModel() {
     val searchKeyword    = SingleLiveEvent<String>()
     val setIsLoading     = SingleLiveEvent<Boolean>()
 
-    var pageNumber = 2
-    var keyword = ""
+    private var pageNumber = 2
+    private var keyword = ""
 
     fun getCoverImages(keyword: String = "") {
         items.clear()
@@ -93,7 +95,7 @@ class HomeViewModel : BaseViewModel() {
                 it.list?.let { list ->
                     if (list.isEmpty()) {
                         viewModelScope.launchUI {
-                            WeDriveTestApplication.instance.showToast("추가 이미지가 없습니다.")
+                            WeDriveTestApplication.instance.showToast(getString(R.string.home_last_post))
                         }
                         return@executeApi
                     }
