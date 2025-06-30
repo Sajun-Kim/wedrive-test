@@ -32,8 +32,7 @@ class HomeSearchRecentViewHolder(private val binding: ItemHomeSearchRecentBindin
             item.onCancelClicked(item.keyword)
 
             // 화면에서 제거
-            val position = bindingAdapterPosition
-            listener?.onItemDismiss(position)
+            listener?.onItemDismiss(bindingAdapterPosition)
         }
     }
 }

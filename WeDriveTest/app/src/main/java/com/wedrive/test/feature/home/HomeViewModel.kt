@@ -154,6 +154,7 @@ class HomeViewModel : BaseViewModel() {
 
     // 최근 검색 키워드 클릭 시
     fun searchKeyword(keyword: String) {
+        sqliteManager.insertOrUpdateKeyword(keyword)
         searchKeyword.postValue(keyword)
     }
 
