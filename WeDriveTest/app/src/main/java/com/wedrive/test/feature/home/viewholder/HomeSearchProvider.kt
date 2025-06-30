@@ -1,15 +1,17 @@
 package com.wedrive.test.feature.home.viewholder
 
 import android.view.ViewGroup
+import androidx.core.database.getStringOrNull
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.namuplanet.base.extension.bind
 import com.namuplanet.base.view.BaseAdapter
 import com.namuplanet.base.view.BaseViewHolder
 import com.namuplanet.base.view.DisplayableItem
 import com.namuplanet.base.view.ViewHolderProvider
-import com.namuplanet.base.view.displayableItems
 import com.wedrive.test.R
+import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.databinding.ItemHomeSearchBinding
+import com.wedrive.test.utility.sqlite.SQLiteManager
 
 private val LAYOUT_ID = R.layout.item_home_search
 
@@ -31,15 +33,24 @@ class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
             adapter = baseAdapter
         }
 
-        showRecentSearchKeywords()
+        showSavedKeywords()
     }
 
-    fun showRecentSearchKeywords() {
-        baseAdapter.setData(
-            displayableItems {
-                +HomeSearchRecentItem("검정색", {})
-            }
-        )
+    val sqliteManager = SQLiteManager(WeDriveTestApplication.instance.applicationContext)
+
+    fun showSavedKeywords() {
+        val items = mutableListOf<HomeSearchRecentItem>()
+        val cursor = sqliteManager.getAllKeyword()
+        if (cursor.moveToFirst()) {
+            do {
+                val keyword = cursor.getStringOrNull(cursor.getColumnIndex("keyword"))
+                if (keyword != null) {
+                    items.add(HomeSearchRecentItem(keyword, {}))
+                }
+            } while (cursor.moveToNext())
+        }
+
+        baseAdapter.setData(items)
     }
 }
 
