@@ -16,4 +16,6 @@
 
     <!-- 홈 -->
     <string name="home_search_hint">Search</string>
+    <string name="home_search_recent">최근 검색어</string>
+    <string name="home_search_reset">검색기록초기화</string>
 </resources>

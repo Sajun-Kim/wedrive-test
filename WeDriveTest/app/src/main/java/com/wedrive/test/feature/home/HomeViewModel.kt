@@ -20,7 +20,7 @@ class HomeViewModel : BaseViewModel() {
     val showItems = MutableLiveData<List<DisplayableItem>>()
     val moveToHomeDetail = SingleLiveEvent<Triple<String, Int, Int>>()
 
-    fun initHome(keyword: String = "") {
+    fun getCoverImages(keyword: String = "") {
         items.clear()
 
         val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
