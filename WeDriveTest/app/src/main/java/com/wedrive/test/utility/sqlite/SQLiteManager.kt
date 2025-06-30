@@ -59,6 +59,12 @@ class SQLiteManager(context: Context) {
         db.close()
     }
 
+    fun deleteAllKeywords() {
+        val db = dbHelper.writableDatabase
+        db.delete(keywordTableName, null, null)
+        db.close()
+    }
+
     fun getAllKeyword(): Cursor {
         val db = dbHelper.readableDatabase
         val cursor = db.query(

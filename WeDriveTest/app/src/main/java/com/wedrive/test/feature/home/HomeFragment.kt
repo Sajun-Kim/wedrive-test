@@ -72,7 +72,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
                     binding.rvHome.layoutManager = linearLayoutManager
                     baseAdapter.setData(
                         displayableItems {
-                            +HomeSearchItem()
+                            +HomeSearchItem (
+                                getSavedKeywords = { viewModel.getSavedKeywords() },
+                                deleteAllKeywords = { viewModel.deleteAllKeywords() }
+                            )
                         }
                     )
                 }
@@ -99,6 +102,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             binding.etSearch.clearFocus()
             binding.etSearch.setText("")
             hideKeyboard(binding.tvCancel)
+
+//            ViewUtil.changeConstraintMargin(
+//                context  = requireContext(),
+//                layout   = binding.lyMain,
+//                view     = binding.etSearch,
+//                anchor   = ConstraintSet.END,
+//                marginDp = 10
+//            )
+//            binding.tvCancel.visibility = View.GONE
+//
+//            binding.rvHome.layoutManager = staggeredGridLayoutManager
+//            viewModel.getCoverImages()
         }
 
         // 키보드 검색(엔터) 눌렀을 때 동작 설정

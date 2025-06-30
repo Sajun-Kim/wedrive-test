@@ -1,32 +1,38 @@
 package com.wedrive.test.feature.home.viewholder
 
 import android.view.ViewGroup
-import androidx.core.database.getStringOrNull
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.namuplanet.base.extension.bind
+import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.view.BaseAdapter
 import com.namuplanet.base.view.BaseViewHolder
 import com.namuplanet.base.view.DisplayableItem
+import com.namuplanet.base.view.ItemListener
 import com.namuplanet.base.view.ViewHolderProvider
 import com.wedrive.test.R
-import com.wedrive.test.WeDriveTestApplication
 import com.wedrive.test.databinding.ItemHomeSearchBinding
-import com.wedrive.test.utility.sqlite.SQLiteManager
 
 private val LAYOUT_ID = R.layout.item_home_search
 
 data class HomeSearchItem(
-    val tmp: String = "",
+    val getSavedKeywords: () -> List<HomeSearchRecentItem>,
+    val deleteAllKeywords: () -> Unit,
 ): DisplayableItem(LAYOUT_ID)
 
 class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
     BaseViewHolder<HomeSearchItem, Any>(binding) {
     private val baseAdapter: BaseAdapter by lazy {
         BaseAdapter().apply {
-            addHolder(HomeSearchRecentProvider())
+            addHolder(
+                holderProvider = HomeSearchRecentProvider(object : ItemListener {
+                    override fun onItemDismiss(position: Int) {
+                        if (position >= 0 && position < baseAdapter.itemCount)
+                            baseAdapter.removeData(listOf(position))
+                    }
+                })
+            )
         }
     }
 
@@ -39,24 +45,12 @@ class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
             adapter = baseAdapter
         }
 
-        showSavedKeywords()
-    }
-
-    val sqliteManager = SQLiteManager(WeDriveTestApplication.instance.applicationContext)
-
-    fun showSavedKeywords() {
-        val items = mutableListOf<HomeSearchRecentItem>()
-        val cursor = sqliteManager.getAllKeyword()
-        if (cursor.moveToFirst()) {
-            do {
-                val keyword = cursor.getStringOrNull(cursor.getColumnIndex("keyword"))
-                if (keyword != null) {
-                    items.add(HomeSearchRecentItem(keyword, {}))
-                }
-            } while (cursor.moveToNext())
+        binding.tvSearchReset.setOnSingleClickListener {
+            item.deleteAllKeywords()
+            baseAdapter.clearData()
         }
 
-        baseAdapter.setData(items)
+        baseAdapter.setData(item.getSavedKeywords())
     }
 }
 

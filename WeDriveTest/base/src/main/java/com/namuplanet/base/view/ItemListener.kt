@@ -1,3 +1,5 @@
 package com.namuplanet.base.view
 
-interface ItemListener
+interface ItemListener {
+    fun onItemDismiss(position: Int)
+}
