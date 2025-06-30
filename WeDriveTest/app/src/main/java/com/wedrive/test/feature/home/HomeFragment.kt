@@ -55,70 +55,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         binding.etSearch.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             when (hasFocus) {
                 true -> {
-                    // 검색창 힌트 변경
                     binding.etSearch.hint = ""
-
-                    // 검색창 마진, Visibility 변경
-                    ViewUtil.changeConstraintMargin(
-                        context  = requireContext(),
-                        layout   = binding.lyMain,
-                        view     = binding.etSearch,
-                        anchor   = ConstraintSet.END,
-                        marginDp = 54
-                    )
-                    binding.tvCancel.visibility = View.VISIBLE
-
-                    // 검색창 아래 화면 변경
-                    binding.rvHome.layoutManager = linearLayoutManager
-                    baseAdapter.setData(
-                        displayableItems {
-                            +HomeSearchItem (
-                                getSavedKeywords = { viewModel.getSavedKeywords() },
-                                deleteAllKeywords = { viewModel.deleteAllKeywords() }
-                            )
-                        }
-                    )
+                    changeRecyclerView(HomeState.SEARCH)
                 }
-                false -> {
-                    binding.etSearch.hint = getString(R.string.home_search_hint)
-
-                    ViewUtil.changeConstraintMargin(
-                        context  = requireContext(),
-                        layout   = binding.lyMain,
-                        view     = binding.etSearch,
-                        anchor   = ConstraintSet.END,
-                        marginDp = 10
-                    )
-                    binding.tvCancel.visibility = View.GONE
-
-                    binding.rvHome.layoutManager = staggeredGridLayoutManager
-                    viewModel.getCoverImages()
-                }
+                false -> binding.etSearch.hint = getString(R.string.home_search_hint)
             }
         }
 
         // 취소 클릭 시
         binding.tvCancel.setOnClickListener {
-            binding.etSearch.clearFocus()
-            binding.etSearch.setText("")
-            hideKeyboard(binding.tvCancel)
-
-//            ViewUtil.changeConstraintMargin(
-//                context  = requireContext(),
-//                layout   = binding.lyMain,
-//                view     = binding.etSearch,
-//                anchor   = ConstraintSet.END,
-//                marginDp = 10
-//            )
-//            binding.tvCancel.visibility = View.GONE
-//
-//            binding.rvHome.layoutManager = staggeredGridLayoutManager
-//            viewModel.getCoverImages()
+            onCancelClicked()
         }
 
         // 키보드 검색(엔터) 눌렀을 때 동작 설정
         binding.etSearch.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                binding.rvHome.layoutManager = staggeredGridLayoutManager
                 viewModel.getCoverImages(view.text.toString())
                 hideKeyboard(view)
                 sqliteManager.insertOrUpdateKeyword(view.text.toString())
@@ -131,9 +83,58 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         viewModel.getCoverImages()
     }
 
+    private fun onCancelClicked() {
+        binding.etSearch.clearFocus()
+        binding.etSearch.setText("")
+        hideKeyboard(binding.tvCancel)
+        changeRecyclerView(HomeState.DEFAULT)
+    }
+
     private fun hideKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun changeRecyclerView(homeState: HomeState) {
+        when (homeState) {
+            HomeState.DEFAULT -> {
+                // 검색창 마진, Visibility 변경
+                ViewUtil.changeConstraintMargin(
+                    context  = requireContext(),
+                    layout   = binding.lyMain,
+                    view     = binding.etSearch,
+                    anchor   = ConstraintSet.END,
+                    marginDp = 10
+                )
+                binding.tvCancel.visibility = View.GONE
+
+                // 검색창 아래 화면 변경
+                binding.rvHome.layoutManager = staggeredGridLayoutManager
+                viewModel.getCoverImages()
+            }
+            HomeState.SEARCH -> {
+                // 검색창 마진, Visibility 변경
+                ViewUtil.changeConstraintMargin(
+                    context  = requireContext(),
+                    layout   = binding.lyMain,
+                    view     = binding.etSearch,
+                    anchor   = ConstraintSet.END,
+                    marginDp = 54
+                )
+                binding.tvCancel.visibility = View.VISIBLE
+
+                // 검색창 아래 화면 변경
+                binding.rvHome.layoutManager = linearLayoutManager
+                baseAdapter.setData(
+                    displayableItems {
+                        +HomeSearchItem (
+                            getSavedKeywords  = { viewModel.getSavedKeywords()  },
+                            deleteAllKeywords = { viewModel.deleteAllKeywords() }
+                        )
+                    }
+                )
+            }
+        }
     }
 
     override fun observeLiveData() {
@@ -150,14 +151,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     private var backPressedTime = 0L
     override fun onBackPressed(): Boolean {
-        // 2초 내 취소 2번 누르면 종료
-        if (System.currentTimeMillis() > backPressedTime + 2_000L) {
-            backPressedTime = System.currentTimeMillis()
-            WeDriveTestApplication.instance.showToast(getString(R.string.common_exit_confirm))
+        if (binding.rvHome.layoutManager == linearLayoutManager) {
+            onCancelClicked()
             return true
         }
         else {
-            return false
+            // 2초 내 취소 2번 누르면 종료
+            if (System.currentTimeMillis() > backPressedTime + 2_000L) {
+                backPressedTime = System.currentTimeMillis()
+                WeDriveTestApplication.instance.showToast(getString(R.string.common_exit_confirm))
+                return true
+            } else {
+                return false
+            }
         }
     }
+}
+
+enum class HomeState {
+    DEFAULT, SEARCH
 }
