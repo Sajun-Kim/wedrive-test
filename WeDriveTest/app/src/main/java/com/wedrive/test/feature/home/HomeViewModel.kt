@@ -20,12 +20,12 @@ class HomeViewModel : BaseViewModel() {
 
     private val items = mutableListOf<DisplayableItem>()
 
-    private val appContext = WeDriveTestApplication.instance.applicationContext
+    private val appContext    = WeDriveTestApplication.instance.applicationContext
     private val sqliteManager = SQLiteManager(appContext)
 
-    val showItems = MutableLiveData<List<DisplayableItem>>()
+    val showItems        = MutableLiveData<List<DisplayableItem>>()
     val moveToHomeDetail = SingleLiveEvent<Triple<String, Int, Int>>()
-    val searchKeyword = SingleLiveEvent<String>()
+    val searchKeyword    = SingleLiveEvent<String>()
 
     fun getCoverImages(keyword: String = "") {
         items.clear()
@@ -52,10 +52,10 @@ class HomeViewModel : BaseViewModel() {
                     list.forEach { img ->
                         items.add(
                             HomeImageItem(
-                                pid      = img.pid,
-                                imageUrl = img.cover,
-                                width    = img.cover_size.width,
-                                height   = img.cover_size.height,
+                                pid            = img.pid,
+                                imageUrl       = img.cover,
+                                width          = img.cover_size.width,
+                                height         = img.cover_size.height,
                                 onImageClicked = ::onImageClicked
                             )
                         )
@@ -72,6 +72,7 @@ class HomeViewModel : BaseViewModel() {
         )
     }
 
+    // DB에 저장된 키워드 조회
     fun getSavedKeywords(): List<HomeSearchRecentItem> {
         val items = mutableListOf<HomeSearchRecentItem>()
         val cursor = sqliteManager.getAllKeyword()
@@ -93,18 +94,22 @@ class HomeViewModel : BaseViewModel() {
         return items
     }
 
+    // DB에 저장된 키워드 모두 제거
     fun deleteAllKeywords() {
         sqliteManager.deleteAllKeywords()
     }
 
+    // 최근 검색 키워드 클릭 시
     fun searchKeyword(keyword: String) {
         searchKeyword.postValue(keyword)
     }
 
+    // DB에 저장된 특정 키워드 제거
     private fun deleteKeyword(keyword: String) {
         sqliteManager.deleteKeyword(keyword)
     }
 
+    // 이미지 클릭 시 상세 화면으로 이동
     private fun onImageClicked(pid: String, width: Int, height: Int) {
         moveToHomeDetail.postValue(Triple(pid, width, height))
     }

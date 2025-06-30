@@ -38,9 +38,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     private val appContext = WeDriveTestApplication.instance.applicationContext
 
+    // 기본 홈 화면 레이아웃
     val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
         gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
     }
+    // 최근 검색어 레이아웃
     val linearLayoutManager = LinearLayoutManager(appContext)
 
     val sqliteManager = SQLiteManager(appContext)
@@ -56,7 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             when (hasFocus) {
                 true -> {
                     binding.etSearch.hint = ""
-                    changeRecyclerView(HomeState.SEARCH)
+                    changeScreen(HomeState.SEARCH)
                 }
                 false -> binding.etSearch.hint = getString(R.string.home_search_hint)
             }
@@ -83,19 +85,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         viewModel.getCoverImages()
     }
 
+    // 검색창에서 취소 텍스트/버튼 클릭 시
     private fun onCancelClicked() {
         binding.etSearch.clearFocus()
         binding.etSearch.setText("")
         hideKeyboard(binding.tvCancel)
-        changeRecyclerView(HomeState.DEFAULT)
+        changeScreen(HomeState.DEFAULT)
     }
 
+    // IME 숨기기
     private fun hideKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun changeRecyclerView(homeState: HomeState) {
+    // 기본 홈 화면, 최근 검색 화면 전환
+    private fun changeScreen(homeState: HomeState) {
         when (homeState) {
             HomeState.DEFAULT -> {
                 // 검색창 마진, Visibility 변경
