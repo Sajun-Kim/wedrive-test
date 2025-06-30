@@ -69,6 +69,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             }
         }
 
+        // 취소 클릭 시
+        binding.tvCancel.setOnClickListener {
+            binding.etSearch.clearFocus()
+            binding.etSearch.setText("")
+            hideKeyboard(binding.tvCancel)
+        }
+
         // 키보드 검색(엔터) 눌렀을 때 동작 설정
         binding.etSearch.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
