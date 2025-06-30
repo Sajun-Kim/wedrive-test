@@ -11,6 +11,7 @@ import com.wedrive.test.extension.getMessage
 import timber.log.Timber
 
 class LoginViewModel : BaseViewModel() {
+
     private val authService = AuthService.authService
 
     val moveToHome = SingleLiveEvent<Void?>()
@@ -18,8 +19,7 @@ class LoginViewModel : BaseViewModel() {
     fun login(mid: String, pwd: String) {
         executeApi(
             apiCall = {
-//                loginService.getAuthToken(LoginRequest(mid, pwd))
-                authService.getAuthToken(LoginRequest("test001", "74726556"))
+                authService.getAuthToken(LoginRequest(mid, pwd))
             },
             onSuccess = {
                 Timber.d("access token  : ${it.accessToken}")
