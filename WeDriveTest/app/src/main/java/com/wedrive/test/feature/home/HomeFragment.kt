@@ -115,12 +115,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
                 doSearch(binding.etSearch.text.toString())
         }
 
-        viewModel.getCoverImages()
+        viewModel.getPosts()
     }
 
     private fun doSearch(keyword: String) {
         binding.rvHome.layoutManager = staggeredGridLayoutManager
-        viewModel.getCoverImages(keyword)
+        viewModel.getPosts(keyword)
         hideKeyboard(binding.root)
         sqliteManager.insertOrUpdateKeyword(keyword)
         binding.etSearch.clearFocus()
@@ -128,7 +128,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     private fun loadMoreItems() {
         isLoading = true
-        viewModel.addCoverImages()
+        viewModel.addPosts()
     }
 
     // 검색창에서 취소 텍스트/버튼 클릭 시
@@ -161,7 +161,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
                 // 검색창 아래 화면 변경
                 binding.rvHome.layoutManager = staggeredGridLayoutManager
-                viewModel.getCoverImages()
+                viewModel.getPosts()
             }
             HomeState.SEARCH -> {
                 // 검색창 마진, Visibility 변경
@@ -209,7 +209,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             binding.etSearch.clearFocus()
             hideKeyboard(binding.rvHome)
             binding.rvHome.layoutManager = staggeredGridLayoutManager
-            viewModel.getCoverImages(it)
+            viewModel.getPosts(it)
         }
     }
 

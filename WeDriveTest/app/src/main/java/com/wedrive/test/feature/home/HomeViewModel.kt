@@ -15,6 +15,7 @@ import com.wedrive.test.feature.home.viewholder.HomeImageItem
 import com.wedrive.test.feature.home.viewholder.HomeSearchRecentItem
 import com.wedrive.test.utility.getString
 import com.wedrive.test.utility.sqlite.SQLiteManager
+import com.wedrive.test.vo.PostResponse
 
 class HomeViewModel : BaseViewModel() {
     private val postService = PostService.authService
@@ -33,18 +34,67 @@ class HomeViewModel : BaseViewModel() {
     private var pageNumber = 2
     private var keyword = ""
 
-    fun getCoverImages(keyword: String = "") {
+    fun getPosts(keyword: String = "") {
         items.clear()
         pageNumber = 2
         this.keyword = keyword
         setIsLoading.postValue(false)
 
+        // 최초 게시물 조회
+        callPostApi(keyword = keyword) { list ->
+            list.forEach { img ->
+                items.add(
+                    HomeImageItem(
+                        pid            = img.pid,
+                        imageUrl       = img.cover,
+                        width          = img.cover_size.width,
+                        height         = img.cover_size.height,
+                        onImageClicked = ::onImageClicked
+                    )
+                )
+            }
+
+            showItems.postValue(items)
+        }
+    }
+
+    fun addPosts() {
+        items.clear()
+
+        // 특정 페이지 게시물 조회
+        callPostApi(pageNumber, keyword) { list ->
+            if (list.isEmpty()) {
+                viewModelScope.launchUI {
+                    WeDriveTestApplication.instance.showToast(getString(R.string.home_last_post))
+                }
+                return@callPostApi
+            }
+
+            list.forEach { img ->
+                items.add(
+                    HomeImageItem(
+                        pid            = img.pid,
+                        imageUrl       = img.cover,
+                        width          = img.cover_size.width,
+                        height         = img.cover_size.height,
+                        onImageClicked = ::onImageClicked
+                    )
+                )
+            }
+
+            addItems.postValue(items)
+            pageNumber += 1
+            setIsLoading.postValue(false)
+        }
+    }
+
+    private fun callPostApi(page: Int = 1, keyword: String = "", callback: (List<PostResponse>) -> Unit) {
         val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
-        // 전체 게시물 조회
+
         executeApi(
             apiCall = {
                 postService.searchPost(
-                    page         = 1,
+                    page         = page,
                     pagePer      = 10,
                     windowWidth  = width - 20.dpToPx(appContext), // margin 고려
                     windowHeight = height,
@@ -53,68 +103,7 @@ class HomeViewModel : BaseViewModel() {
             },
             onSuccess = {
                 it.list?.let { list ->
-                    list.forEach { img ->
-                        items.add(
-                            HomeImageItem(
-                                pid            = img.pid,
-                                imageUrl       = img.cover,
-                                width          = img.cover_size.width,
-                                height         = img.cover_size.height,
-                                onImageClicked = ::onImageClicked
-                            )
-                        )
-                    }
-
-                    showItems.postValue(items)
-                }
-            },
-            onFailure = {
-                viewModelScope.launchUI {
-                    WeDriveTestApplication.instance.showToast(it.getMessage())
-                }
-            }
-        )
-    }
-
-    fun addCoverImages() {
-        items.clear()
-
-        val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
-        // 특정 페이지 게시물 조회
-        executeApi(
-            apiCall = {
-                postService.searchPost(
-                    page         = pageNumber,
-                    pagePer      = 10,
-                    windowWidth  = width - 20.dpToPx(appContext), // margin 고려
-                    windowHeight = height,
-                    keyword      = this.keyword
-                )
-            },
-            onSuccess = {
-                it.list?.let { list ->
-                    if (list.isEmpty()) {
-                        viewModelScope.launchUI {
-                            WeDriveTestApplication.instance.showToast(getString(R.string.home_last_post))
-                        }
-                        return@executeApi
-                    }
-
-                    list.forEach { img ->
-                        items.add(
-                            HomeImageItem(
-                                pid            = img.pid,
-                                imageUrl       = img.cover,
-                                width          = img.cover_size.width,
-                                height         = img.cover_size.height,
-                                onImageClicked = ::onImageClicked
-                            )
-                        )
-                    }
-
-                    addItems.postValue(items)
-                    pageNumber += 1
-                    setIsLoading.postValue(false)
+                    callback(list)
                 }
             },
             onFailure = {
