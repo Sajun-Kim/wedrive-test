@@ -25,6 +25,7 @@ class HomeViewModel : BaseViewModel() {
 
     val showItems = MutableLiveData<List<DisplayableItem>>()
     val moveToHomeDetail = SingleLiveEvent<Triple<String, Int, Int>>()
+    val searchKeyword = SingleLiveEvent<String>()
 
     fun getCoverImages(keyword: String = "") {
         items.clear()
@@ -78,7 +79,13 @@ class HomeViewModel : BaseViewModel() {
             do {
                 val keyword = cursor.getStringOrNull(cursor.getColumnIndex("keyword"))
                 if (keyword != null) {
-                    items.add(HomeSearchRecentItem(keyword, ::deleteKeyword))
+                    items.add(
+                        HomeSearchRecentItem(
+                            keyword         = keyword,
+                            onItemClicked   = ::searchKeyword,
+                            onCancelClicked = ::deleteKeyword
+                        )
+                    )
                 }
             } while (cursor.moveToNext())
         }
@@ -88,6 +95,10 @@ class HomeViewModel : BaseViewModel() {
 
     fun deleteAllKeywords() {
         sqliteManager.deleteAllKeywords()
+    }
+
+    fun searchKeyword(keyword: String) {
+        searchKeyword.postValue(keyword)
     }
 
     private fun deleteKeyword(keyword: String) {

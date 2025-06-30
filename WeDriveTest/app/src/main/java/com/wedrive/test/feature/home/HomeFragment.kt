@@ -147,6 +147,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         viewModel.moveToHomeDetail.observe(this) {
             navigate(HomeFragmentDirections.actionHomeToDetail(it.first, it.second, it.third))
         }
+        viewModel.searchKeyword.observe(this) {
+            binding.etSearch.setText(it)
+            binding.etSearch.clearFocus()
+            hideKeyboard(binding.rvHome)
+            binding.rvHome.layoutManager = staggeredGridLayoutManager
+            viewModel.getCoverImages(it)
+        }
     }
 
     private var backPressedTime = 0L

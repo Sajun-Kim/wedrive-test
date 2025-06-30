@@ -2,19 +2,20 @@ package com.wedrive.test.feature.home.viewholder
 
 import android.view.ViewGroup
 import com.namuplanet.base.extension.bind
+import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.view.BaseViewHolder
 import com.namuplanet.base.view.DisplayableItem
 import com.namuplanet.base.view.ItemListener
 import com.namuplanet.base.view.ViewHolderProvider
 import com.wedrive.test.R
 import com.wedrive.test.databinding.ItemHomeSearchRecentBinding
-import timber.log.Timber
 
 private val LAYOUT_ID = R.layout.item_home_search_recent
 
 data class HomeSearchRecentItem(
     val keyword         : String,
-    val onCacnelClicked : (String) -> Unit
+    val onItemClicked   : (String) -> Unit,
+    val onCancelClicked : (String) -> Unit
 ): DisplayableItem(LAYOUT_ID)
 
 class HomeSearchRecentViewHolder(private val binding: ItemHomeSearchRecentBinding, private val listener: ItemListener?):
@@ -22,9 +23,13 @@ class HomeSearchRecentViewHolder(private val binding: ItemHomeSearchRecentBindin
     override fun bind(item: HomeSearchRecentItem, itemListener: Any?) {
         binding.tvKeyword.text = item.keyword
 
+        binding.lyHomeTop.setOnSingleClickListener {
+            item.onItemClicked(item.keyword)
+        }
+
         binding.ivCancel.setOnClickListener {
             // DB에서 제거
-            item.onCacnelClicked(item.keyword)
+            item.onCancelClicked(item.keyword)
 
             // 화면에서 제거
             val position = bindingAdapterPosition
