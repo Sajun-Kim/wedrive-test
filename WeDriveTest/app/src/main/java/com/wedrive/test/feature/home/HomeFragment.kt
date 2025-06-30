@@ -109,6 +109,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     private var backPressedTime = 0L
     override fun onBackPressed(): Boolean {
+        // 2초 내 취소 2번 누르면 종료
         if (System.currentTimeMillis() > backPressedTime + 2_000L) {
             backPressedTime = System.currentTimeMillis()
             WeDriveTestApplication.instance.showToast(getString(R.string.common_exit_confirm))
