@@ -43,7 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
     }
     val linearLayoutManager = LinearLayoutManager(appContext)
 
-    val sqlHelper = SQLiteManager(appContext)
+    val sqliteManager = SQLiteManager(appContext)
 
     override fun initializeView() {
         binding.rvHome.apply {
@@ -106,7 +106,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.getCoverImages(view.text.toString())
                 hideKeyboard(view)
-                sqlHelper.insertOrUpdateKeyword(view.text.toString())
+                sqliteManager.insertOrUpdateKeyword(view.text.toString())
                 return@setOnEditorActionListener true
             }
             else
