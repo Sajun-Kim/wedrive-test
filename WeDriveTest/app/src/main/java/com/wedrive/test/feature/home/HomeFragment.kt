@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.navigate
+import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.platfrom.BaseFragment
 import com.namuplanet.base.platfrom.OnBackPressedListener
 import com.namuplanet.base.view.BaseAdapter
@@ -40,13 +41,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
     private val appContext = WeDriveTestApplication.instance.applicationContext
 
     // 기본 홈 화면 레이아웃
-    val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+    private val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
         gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
     }
     // 최근 검색어 레이아웃
-    val linearLayoutManager = LinearLayoutManager(appContext)
+    private val linearLayoutManager = LinearLayoutManager(appContext)
 
-    val sqliteManager = SQLiteManager(appContext)
+    private val sqliteManager = SQLiteManager(appContext)
 
     // 이미지 로딩중 체크
     private var isLoading = false
@@ -101,17 +102,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
         // 키보드 검색(엔터) 눌렀을 때 동작 설정
         binding.etSearch.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                binding.rvHome.layoutManager = staggeredGridLayoutManager
-                viewModel.getCoverImages(view.text.toString())
-                hideKeyboard(view)
-                sqliteManager.insertOrUpdateKeyword(view.text.toString())
+                doSearch(view.text.toString())
                 return@setOnEditorActionListener true
             }
             else
                 false
         }
 
+        // 검색 아이콘 클릭 시
+        binding.ivSearch.setOnSingleClickListener {
+            if (binding.etSearch.text.toString().isNotEmpty())
+                doSearch(binding.etSearch.text.toString())
+        }
+
         viewModel.getCoverImages()
+    }
+
+    private fun doSearch(keyword: String) {
+        binding.rvHome.layoutManager = staggeredGridLayoutManager
+        viewModel.getCoverImages(keyword)
+        hideKeyboard(binding.root)
+        sqliteManager.insertOrUpdateKeyword(keyword)
+        binding.etSearch.clearFocus()
     }
 
     private fun loadMoreItems() {
