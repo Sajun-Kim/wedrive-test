@@ -41,7 +41,7 @@ class HomeViewModel : BaseViewModel() {
         setIsLoading.postValue(false)
 
         // 최초 게시물 조회
-        callPostApi(keyword = keyword) { list ->
+        callPostApi { list ->
             list.forEach { img ->
                 items.add(
                     HomeImageItem(
@@ -62,7 +62,7 @@ class HomeViewModel : BaseViewModel() {
         items.clear()
 
         // 특정 페이지 게시물 조회
-        callPostApi(pageNumber, keyword) { list ->
+        callPostApi(pageNumber) { list ->
             if (list.isEmpty()) {
                 viewModelScope.launchUI {
                     WeDriveTestApplication.instance.showToast(getString(R.string.home_last_post))
@@ -88,7 +88,7 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    private fun callPostApi(page: Int = 1, keyword: String = "", callback: (List<PostResponse>) -> Unit) {
+    private fun callPostApi(page: Int = 1, callback: (List<PostResponse>) -> Unit) {
         val (width, height) = WeDriveTestApplication.instance.getDeviceWidthHeight()
 
         executeApi(
