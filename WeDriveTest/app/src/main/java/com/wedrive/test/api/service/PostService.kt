@@ -10,14 +10,6 @@ import retrofit2.http.Query
 
 interface PostService {
     @GET("post")
-    fun getPost(
-        @Query("page")         page         : Int,
-        @Query("pagePer")      pagePer      : Int,
-        @Query("windowWidth")  windowWidth  : Int,
-        @Query("windowHeight") windowHeight : Int
-    ) : DlPostResponse<List<PostResponse>>
-
-    @GET("post")
     fun searchPost(
         @Query("page")         page         : Int,
         @Query("pagePer")      pagePer      : Int,
