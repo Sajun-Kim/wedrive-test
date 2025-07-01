@@ -17,8 +17,8 @@ import com.wedrive.test.databinding.ItemHomeSearchBinding
 private val LAYOUT_ID = R.layout.item_home_search
 
 data class HomeSearchItem(
-    val getSavedKeywords: () -> List<HomeSearchRecentItem>,
-    val deleteAllKeywords: () -> Unit,
+    val getSavedKeywords  : () -> List<HomeSearchRecentItem>,
+    val deleteAllKeywords : () -> Unit,
 ): DisplayableItem(LAYOUT_ID)
 
 class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
@@ -26,8 +26,9 @@ class HomeSearchViewHolder(private val binding: ItemHomeSearchBinding):
     private val baseAdapter: BaseAdapter by lazy {
         BaseAdapter().apply {
             addHolder(
-                holderProvider = HomeSearchRecentProvider(object : ItemListener {
+                HomeSearchRecentProvider(object : ItemListener {
                     override fun onItemDismiss(position: Int) {
+                        // 현재 아이템(최근 검색어) 화면에서 제거
                         if (position >= 0 && position < baseAdapter.itemCount)
                             baseAdapter.removeData(listOf(position))
                     }

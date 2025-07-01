@@ -2,8 +2,6 @@ package com.wedrive.test.feature.home.viewholder
 
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.namuplanet.base.extension.bind
 import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.view.BaseViewHolder
@@ -25,7 +23,8 @@ data class HomeImageItem(
 class HomeImageViewHolder(private val binding: ItemHomeImageBinding):
     BaseViewHolder<HomeImageItem, Any>(binding) {
     override fun bind(item: HomeImageItem, itemListener: Any?) {
-        binding.ivImage.layoutParams.width = item.width
+        // Staggerd Grid Layout 배치를 위해 Image View 크기 미리 설정
+        binding.ivImage.layoutParams.width  = item.width
         binding.ivImage.layoutParams.height = item.height
 
         Glide.with(binding.ivImage)

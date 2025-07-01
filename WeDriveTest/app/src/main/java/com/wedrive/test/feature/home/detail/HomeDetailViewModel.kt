@@ -5,8 +5,6 @@ import com.namuplanet.base.platfrom.BaseViewModel
 import com.wedrive.test.api.service.AuthService
 import com.wedrive.test.api.service.PostService
 import com.wedrive.test.extension.getMessage
-import com.wedrive.test.extension.getStackTrace
-import com.wedrive.test.extension.hasErrorCode
 import timber.log.Timber
 
 class HomeDetailViewModel : BaseViewModel() {
@@ -20,19 +18,12 @@ class HomeDetailViewModel : BaseViewModel() {
         executeApi(
             apiCall   = { postService.getPostDetail(pid) },
             onSuccess = {
-                Timber.d("pid     : ${it.pid}")
-                Timber.d("cover   : ${it.cover}")
-                Timber.d("ratio   : ${it.ratio}")
-                Timber.d("title   : ${it.title}")
-                Timber.d("context : ${it.context}")
-
                 postDetailItem.cover.postValue(it.cover)
                 postDetailItem.title.postValue(it.title)
                 postDetailItem.context.postValue(it.context)
             },
             onFailure = {
-                Timber.e("autherror?: ${it.hasErrorCode("401")}")
-                Timber.e("failure\n${it.getMessage()}")
+                Timber.e("getPostDetail error\n${it.getMessage()}")
             }
         )
 
@@ -41,17 +32,12 @@ class HomeDetailViewModel : BaseViewModel() {
             apiCall   = { authService.getUserInfo() },
             onSuccess = {
                 it.user?.let { user ->
-                    Timber.d("mid     : ${user.mid}")
-                    Timber.d("profile : ${user.profile}")
-                    Timber.d("name    : ${user.name}")
-
                     postDetailItem.profile.postValue(user.profile)
                     postDetailItem.name.postValue(user.name)
                 }
             },
             onFailure = {
-                Timber.e("userinfo autherror?: ${it.hasErrorCode("401")}")
-                Timber.e("userinfo error\n${it.getMessage()}\n${it.getStackTrace()}")
+                Timber.e("userinfo error\n${it.getMessage()}")
             }
         )
     }

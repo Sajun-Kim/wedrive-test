@@ -8,10 +8,11 @@ import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.popBackStack
 import com.namuplanet.base.extension.setOnSingleClickListener
 import com.namuplanet.base.platfrom.BaseFragment
+import com.namuplanet.base.platfrom.OnBackPressedListener
 import com.wedrive.test.R
 import com.wedrive.test.databinding.FragmentHomeDetailBinding
 
-class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
+class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>(), OnBackPressedListener {
     override fun layoutRes() = R.layout.fragment_home_detail
 
     private val viewModel by lazy {
@@ -23,6 +24,7 @@ class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
     override fun initializeView() {
         binding.item = viewModel.postDetailItem
 
+        // 취소 아이콘 클릭 시
         binding.ivBack.setOnSingleClickListener {
             popBackStack()
         }
@@ -33,6 +35,7 @@ class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
     override fun observeLiveData() {
         viewModel.postDetailItem.cover.observe(this) {
             if (it.isNotEmpty()) {
+                // 홈 화면 미리보기 이미지의 2배 크기로 설정
                 binding.ivImage.layoutParams.width = args.width * 2
                 binding.ivImage.layoutParams.height = args.height * 2
 
@@ -49,5 +52,11 @@ class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
                     .into(binding.ivProfile)
             }
         }
+    }
+
+    // 취소 버튼 클릭 시
+    override fun onBackPressed(): Boolean {
+        popBackStack()
+        return true
     }
 }

@@ -221,6 +221,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
     private var backPressedTime = 0L
     override fun onBackPressed(): Boolean {
         if (binding.rvHome.layoutManager == linearLayoutManager) {
+            // 최근 검색어 화면에서 취소 누르면 기본 홈 화면으로 이동
             onCancelClicked()
             return true
         }
