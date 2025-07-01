@@ -19,6 +19,6 @@ interface AuthService {
     fun getUserInfo(): DlUserInfoResponse<UserInfoResponse>
 
     companion object {
-        val authService: AuthService = DlRetrofit.createRetrofitAuth()
+        val service: AuthService = DlRetrofit.createRetrofit()
     }
 }

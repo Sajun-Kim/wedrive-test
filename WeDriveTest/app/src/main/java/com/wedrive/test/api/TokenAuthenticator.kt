@@ -43,6 +43,8 @@ class TokenAuthenticator(
         Timber.d("storedToken  : $storedAccessToken")
         Timber.d("originUrl    : Bearer $${response.request.url}")
 
+        // 현재 Access Token과 Preference에 저장된 Access Token 비교 후 다르면
+        // 저장된 토큰이 다른 작업에 의해 최신화된 토큰으로 판단해 해당 토큰으로 요청 재시도
         if (currentAccessTokenInHeader != storedAccessToken && storedAccessToken.isNotBlank()) {
             return response.request.newBuilder()
                 .header(DlApiHeader.AUTH_TOKEN, storedAccessToken)
@@ -53,8 +55,8 @@ class TokenAuthenticator(
         synchronized(this) {
             // synchronized 블록에 진입한 후, 다른 스레드가 이미 토큰을 갱신했는지 다시 확인
             val latestStoredAccessToken = pref.get<String>(DlApiHeader.AUTH_TOKEN)
+            // 위와 동일한 작업(현재 토큰, 저장 토큰 비교)
             if (currentAccessTokenInHeader != latestStoredAccessToken && latestStoredAccessToken.isNotBlank()) {
-                // 다른 스레드가 토큰을 갱신했으므로, 그 토큰으로 재시도
                 return response.request.newBuilder()
                     .header(DlApiHeader.AUTH_TOKEN, latestStoredAccessToken)
                     .build()
@@ -69,6 +71,10 @@ class TokenAuthenticator(
             return if (newAccessToken != null) {
                 // 새 액세스 토큰으로 이전 요청 재시도
                 pref[DlApiHeader.AUTH_TOKEN] = "Bearer $newAccessToken" // 새 토큰 저장
+
+                // auth/fail로 리다이렉트 된 경우 처리(무한 재시도 방지)
+                // 기본적으로 이전 요청(토큰 refresh 전 실패한 요청)을 다시 실행하는데,
+                // auth/fail로 리다이렉트 되면 토큰 refresh를 계속 시도하므로 url 직접 지정
                 if (response.request.url.toString().endsWith("auth/fail")) {
                     response.request.newBuilder()
                         .url("https://codetest.wedrive.kr:7880/auth")
@@ -80,12 +86,15 @@ class TokenAuthenticator(
                         .header(DlApiHeader.AUTH_TOKEN, "Bearer $newAccessToken")
                         .build()
                 }
-            } else { // 리프레시 실패 시
-                pref.clearAll() // 토큰 삭제
+            }
+            else { // 리프레시 실패 시
+                // 토큰 삭제 및 앱 재시작
+                pref.clearAll()
                 CoroutineScope(Dispatchers.Main).launch {
                     WeDriveTestApplication.instance.showToast(getString(R.string.login_auth_fail))
                 }
                 WeDriveTestApplication.instance.restartApp()
+
                 null // 요청 중단
             }
         }
@@ -94,7 +103,7 @@ class TokenAuthenticator(
     private fun refreshAccessTokenSync(): String? {
         val currentRefreshToken = pref.get<String>(DlApiHeader.REFRESH_TOKEN)
 
-        // 리프레시 토큰 없으면 갱신 불가능
+        // 리프레시 토큰 없으면 갱신 불가
         if (currentRefreshToken.isBlank())
             return null
 
@@ -118,7 +127,9 @@ class TokenAuthenticator(
                  Timber.e("Failed to refresh token. Code: ${response.code()}, Message: ${response.message()}")
                 if (response.code() == 401 || response.code() == 403) {
                     // 리프레시 토큰이 만료되었거나 유효하지 않음
-                    pref.clearAll() // 토큰 삭제
+
+                    // 토큰 삭제 및 앱 재시작
+                    pref.clearAll()
                     CoroutineScope(Dispatchers.Main).launch {
                         WeDriveTestApplication.instance.showToast(getString(R.string.login_auth_fail))
                     }

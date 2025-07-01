@@ -10,8 +10,8 @@ import com.wedrive.test.extension.hasErrorCode
 import timber.log.Timber
 
 class HomeDetailViewModel : BaseViewModel() {
-    private val authService = AuthService.authService
-    private val postService = PostService.authService
+    private val authService = AuthService.service
+    private val postService = PostService.service
 
     val postDetailItem = PostDetailItem()
 

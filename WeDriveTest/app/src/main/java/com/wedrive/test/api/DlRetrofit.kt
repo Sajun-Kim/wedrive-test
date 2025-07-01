@@ -11,7 +11,6 @@ import com.wedrive.test.utility.getString
 import okhttp3.OkHttpClient
 
 object DlRetrofit {
-    private val httpClient: OkHttpClient = HttpClientProvider.getHttpClient()
     private val httpClientAuth: OkHttpClient = HttpClientProvider.getHttpClientWithAuth()
     val moshi: Moshi = Moshi.Builder()
         .apply {
@@ -23,14 +22,8 @@ object DlRetrofit {
     val retrofit: Retrofit = Retrofit.Builder().baseUrl(getString(R.string.api_host))
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .client(httpClient)
-        .build()
-    val retrofitAuth: Retrofit = Retrofit.Builder().baseUrl(getString(R.string.api_host))
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .client(httpClientAuth)
         .build()
 
     inline fun <reified T> createRetrofit(): T = retrofit.create(T::class.java)
-    inline fun <reified T> createRetrofitAuth(): T = retrofitAuth.create(T::class.java)
 }

@@ -18,7 +18,7 @@ import com.wedrive.test.utility.sqlite.SQLiteManager
 import com.wedrive.test.vo.PostResponse
 
 class HomeViewModel : BaseViewModel() {
-    private val postService = PostService.authService
+    private val postService = PostService.service
 
     private val items = mutableListOf<DisplayableItem>()
 

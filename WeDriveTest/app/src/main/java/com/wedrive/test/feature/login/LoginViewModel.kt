@@ -10,7 +10,7 @@ import com.wedrive.test.api.service.AuthService
 import com.wedrive.test.extension.getMessage
 
 class LoginViewModel : BaseViewModel() {
-    private val authService = AuthService.authService
+    private val authService = AuthService.service
 
     val moveToHome = SingleLiveEvent<Void?>()
 
