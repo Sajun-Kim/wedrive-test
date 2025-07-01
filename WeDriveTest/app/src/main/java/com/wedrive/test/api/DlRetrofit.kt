@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 
 object DlRetrofit {
     private val httpClientAuth: OkHttpClient = HttpClientProvider.getHttpClientWithAuth()
+
     val moshi: Moshi = Moshi.Builder()
         .apply {
             add(KotlinJsonAdapterFactory())

@@ -18,6 +18,7 @@ class LoginViewModel : BaseViewModel() {
         executeApi(
             apiCall   = { authService.getAuthToken(LoginRequest(mid, pwd)) },
             onSuccess = {
+                // Preference에 토큰 저장
                 WeDriveTestApplication.instance.pref[DlApiHeader.AUTH_TOKEN]    = "Bearer ${it.accessToken}"
                 WeDriveTestApplication.instance.pref[DlApiHeader.REFRESH_TOKEN] = "${it.refreshToken}"
 
