@@ -80,6 +80,8 @@ class MainActivity : BaseActivity() {
                     finishAffinity()
                     return
                 }
+
+                // 기본 동작
                 navController.navigateUp()
             }
         })

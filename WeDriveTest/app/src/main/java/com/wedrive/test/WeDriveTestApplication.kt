@@ -16,6 +16,7 @@ class WeDriveTestApplication: Application() {
     }
 
     lateinit var pref: CustomSharedPreferences
+
     private var deviceWidth  : Int = 0
     private var deviceHeight : Int = 0
 
@@ -68,8 +69,4 @@ class WeDriveTestApplication: Application() {
             exitProcess(0)
         }
     }
-}
-
-object PrefKeys {
-    const val USER_ID = "userId"
 }
