@@ -31,9 +31,6 @@ class HomeDetailFragment : BaseFragment<FragmentHomeDetailBinding>() {
     }
 
     override fun observeLiveData() {
-        viewModel.isRequestProcessing.observe(this) {
-            displayProgress(it)
-        }
         viewModel.postDetailItem.cover.observe(this) {
             if (it.isNotEmpty()) {
                 binding.ivImage.layoutParams.width = args.width * 2

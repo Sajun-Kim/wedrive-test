@@ -1,6 +1,7 @@
 package com.wedrive.test.feature.home
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -33,14 +34,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     private val baseAdapter: BaseAdapter by lazy {
         BaseAdapter().apply {
-            addHolder(HomeImageProvider())
-            addHolder(HomeSearchProvider())
+            addHolder(HomeImageProvider())  // 게시물 View Holder
+            addHolder(HomeSearchProvider()) // 최근 검색어 View Holder
         }
     }
 
     private val appContext = WeDriveTestApplication.instance.applicationContext
 
-    // 기본 홈 화면 레이아웃
+    // 게시물 화면 레이아웃
     private val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
         gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
     }
@@ -51,6 +52,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
 
     // 이미지 로딩중 체크
     private var isLoading = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // 로그인 시 설정된 로딩 화면 제거
+        displayProgress(false)
+    }
 
     override fun initializeView() {
         binding.rvHome.apply {
@@ -83,7 +91,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
             }
         })
 
-        // 포커스 여부에 따른 힌트 표시 조정
+        // 포커스 여부에 따른 힌트 및 Recycler View 출력 변경
         binding.etSearch.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             when (hasFocus) {
                 true -> {
@@ -189,9 +197,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), OnBackPressedListener 
     }
 
     override fun observeLiveData() {
-        viewModel.isRequestProcessing.observe(this) {
-            displayProgress(it)
-        }
         viewModel.showItems.observe(this) {
             baseAdapter.setData(it)
         }
