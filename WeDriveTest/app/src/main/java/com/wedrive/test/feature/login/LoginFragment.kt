@@ -1,6 +1,7 @@
 package com.wedrive.test.feature.login
 
 import android.text.InputFilter
+import android.view.inputmethod.EditorInfo
 import com.namuplanet.base.extension.createViewModel
 import com.namuplanet.base.extension.navigate
 import com.namuplanet.base.extension.observe
@@ -24,6 +25,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         newFilters.addAll(currentFilters)
         newFilters.add(AlphaNumericInputFilter())
         binding.etId.filters = newFilters.toTypedArray()
+
+        // 비밀번호 입력창에서 키보드 완료 버튼 클릭 시 로그인 진행
+        binding.etPw.setOnEditorActionListener { textView, actionId, keyEvent ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.login(binding.etId.text.toString(), binding.etPw.text.toString())
+                handled = true
+            }
+            handled
+        }
 
         binding.btnLogin.setOnSingleClickListener {
             viewModel.login(binding.etId.text.toString(), binding.etPw.text.toString())
